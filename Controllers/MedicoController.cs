@@ -2,64 +2,89 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 using System.Linq;
 
 namespace CitasApp.Controllers
 {
     public class MedicoController : Controller
     {
-        private Medico _Medico = new Medico
-        {
-            Id = 1,
-            Nombre = "Dr. Carlos Reyes",
-            Especialidad = "Medicina General",
-            NumeroLicencia = "MG - 10421"
-        };
-        private Medico _Medico2 = new Medico
-        {
-            Id = 2,
-            Nombre = "Dra. Patricia Vega",
-            Especialidad = "Pediatría",
-            NumeroLicencia = "PD - 20835"
-        };
-        private Medico _Medico3 = new Medico
-        {
-            Id = 3,
-            Nombre = "Dr. Roberto Sánchez",
-            Especialidad = "Cardiología",
-            NumeroLicencia = "CA - 30117"
-        };
+        private readonly string _folderPath = Path.Combine(Directory.GetCurrentDirectory(), "Data");
+        private readonly string _medicosFile = "Medico.json";
 
-        // Método auxiliar para agrupar los médicos existentes en una lista
-        private List<Medico> ObtenerMedicos()
+        private Medico[] CargarDatosJSON(string fileName, Medico[] defaultData)
         {
-            return new List<Medico> { _Medico, _Medico2, _Medico3 };
+            string filePath = Path.Combine(_folderPath, fileName);
+
+            if (!Directory.Exists(_folderPath))
+            {
+                Directory.CreateDirectory(_folderPath);
+            }
+
+            if (!System.IO.File.Exists(filePath))
+            {
+                GuardarDatosJSON(fileName, defaultData);
+                return defaultData;
+            }
+
+            try
+            {
+                string json = System.IO.File.ReadAllText(filePath);
+                var array = JsonSerializer.Deserialize(json, typeof(Medico[])) as Medico[];
+                return array ?? defaultData;
+            }
+            catch
+            {
+                return defaultData;
+            }
         }
 
-        // Acción Principal: Muestra la lista y maneja el filtro de especialidad
+        private void GuardarDatosJSON(string fileName, Medico[] data)
+        {
+            string filePath = Path.Combine(_folderPath, fileName);
+
+            if (!Directory.Exists(_folderPath))
+            {
+                Directory.CreateDirectory(_folderPath);
+            }
+
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string json = JsonSerializer.Serialize(data, typeof(Medico[]), options);
+            System.IO.File.WriteAllText(filePath, json);
+        }
+
+        private Medico[] ObtenerMedicos()
+        {
+            var defaultList = new Medico[]
+            {
+                new Medico { Id = 1, Nombre = "Carlos Reyes", Especialidad = "Medicina General", NumeroLicencia = "MG - 10421" },
+                new Medico { Id = 2, Nombre = "Patricia Vega", Especialidad = "Pediatría", NumeroLicencia = "PD - 20835" },
+                new Medico { Id = 3, Nombre = "Roberto Sánchez", Especialidad = "Cardiología", NumeroLicencia = "CA - 30117" }
+            };
+            return CargarDatosJSON(_medicosFile, defaultList);
+        }
+
         public IActionResult Index(string especialidad = null)
         {
             var medicos = ObtenerMedicos();
 
-            // Obtenemos las especialidades únicas de la lista para cargarlas en la vista
             ViewBag.Especialidades = medicos
                 .Select(m => m.Especialidad)
                 .Where(e => !string.IsNullOrEmpty(e))
                 .Distinct()
                 .ToList();
 
-            // Aplicamos el filtro si se selecciona alguna especialidad
             if (!string.IsNullOrEmpty(especialidad))
             {
                 medicos = medicos
                     .Where(m => string.Equals(m.Especialidad, especialidad, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+                    .ToArray();
             }
 
             return View(medicos);
         }
 
-        // Acción para ver el perfil y horarios de un médico específico
         public IActionResult Detalle(int id)
         {
             var medico = ObtenerMedicos().FirstOrDefault(m => m.Id == id);
@@ -70,10 +95,21 @@ namespace CitasApp.Controllers
             return View(medico);
         }
 
-        // Acción para el formulario de registro de un nuevo médico
         public IActionResult Agregar()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult Agregar(Medico nuevoMedico)
+        {
+            var medicos = ObtenerMedicos().ToList();
+            nuevoMedico.Id = medicos.Any() ? medicos.Max(m => m.Id) + 1 : 1;
+            medicos.Add(nuevoMedico);
+
+            GuardarDatosJSON(_medicosFile, medicos.ToArray());
+
+            return RedirectToAction("Index");
         }
     }
 }

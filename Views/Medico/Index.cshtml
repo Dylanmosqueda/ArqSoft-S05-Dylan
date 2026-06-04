@@ -1,8 +1,6 @@
 ﻿@model IEnumerable<CitasApp.Models.Medico>
-@* Asegúrate de que el modelo coincida con el espacio de nombres de tu entidad Medico *@
 
 <style>
-    /* Estilos Clínicos Coherentes con el Portal */
     body {
         background-color: #f8fafc !important;
         color: #1e293b;
@@ -21,7 +19,6 @@
             pointer-events: none;
         }
 
-    /* 1. HEADER PARA MÉDICOS */
     .clinic-header-container {
         position: relative;
         height: 220px;
@@ -68,7 +65,6 @@
         position: relative;
     }
 
-    /* 2. TARJETAS DE MÉDICOS */
     .card-doctor {
         background-color: #ffffff !important;
         color: #1e293b !important;
@@ -86,12 +82,11 @@
 
     .card-doctor-body {
         background-color: #ffffff !important;
-        border-top: 3px solid #0284c7; /* Azul corporativo */
+        border-top: 3px solid #0284c7;
         border-radius: 0 0 8px 8px;
         padding: 1.5rem;
     }
 
-    /* Botones */
     .btn-medical {
         background-color: #0284c7;
         color: white;
@@ -122,7 +117,6 @@
         }
 </style>
 
-<!-- HEADER ANIMADO "DIRECTORIO MÉDICO" -->
 <div class="clinic-header-container shadow-sm">
     <div class="clinic-pulse-effect"></div>
 
@@ -138,7 +132,6 @@
 
 <h1 class="text-center my-4 main-title" style="font-size: 1.8rem; color: #1e293b;">Personal Médico</h1>
 
-<!-- Filtro por Especialidad -->
 <div class="text-center mb-5">
     <a asp-action="Index" class="btn btn-medical btn-sm mx-1 px-4 py-2">Todos</a>
     @if (ViewBag.Especialidades != null)
@@ -150,13 +143,11 @@
     }
 </div>
 
-<!-- Lista de médicos en Tarjetas -->
 <div class="row">
     @foreach (var item in Model)
     {
         <div class="col-md-4 mb-4">
             <div class="card card-doctor h-100 border-0">
-                <!-- Avatar genérico de médico si no tiene una imagen registrada -->
                 <img src="@(item.GetType().GetProperty("ImagenUrl") != null ? item.GetType().GetProperty("ImagenUrl").GetValue(item) : "https://cdn-icons-png.flaticon.com/512/3774/3774299.png")"
                      class="card-img-top p-4"
                      alt="@item.Nombre"
@@ -168,9 +159,8 @@
                     <span class="badge mb-3" style="background-color: #0284c7; border: 1px solid #0369a1; font-size: 0.85rem; padding: 6px 12px; border-radius: 20px;">@item.Especialidad</span>
 
                     <p class="small text-muted mb-3">
-                        N° COLEGIADO / LICENCIA:
+                        N° LICENCIA:
                         <strong class="text-success">
-                            @* Adaptación segura de lectura dinámica para NumeroLicencia o NumeroColegiado *@
                             @(item.GetType().GetProperty("NumeroLicencia") != null
                                 ? item.GetType().GetProperty("NumeroLicencia").GetValue(item)
                                 : (item.GetType().GetProperty("NumeroColegiado") != null
@@ -190,7 +180,6 @@
 
 <hr style="border-color: #e2e8f0; margin: 40px 0;" />
 
-<!-- Botón de Registro -->
 <div class="text-center mb-5 mt-4 pb-5">
     <a asp-action="Agregar" class="btn btn-outline-medical btn-lg shadow-sm" style="border-width: 2px; font-weight: 700; padding: 12px 30px;">
         + REGISTRAR NUEVO MÉDICO

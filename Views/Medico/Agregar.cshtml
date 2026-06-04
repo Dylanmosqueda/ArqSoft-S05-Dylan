@@ -1,0 +1,159 @@
+﻿@model CitasApp.Models.Medico
+
+<style>
+    /* Estilos Clínicos Coherentes con el Portal */
+    body {
+        background-color: #f8fafc !important;
+        color: #1e293b;
+        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #0284c7, #0d9488);
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+    /* Enlace de regreso */
+    .back-link {
+        color: #0284c7;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 25px;
+        transition: color 0.2s;
+    }
+
+        .back-link:hover {
+            color: #0369a1;
+            text-decoration: underline;
+        }
+
+    /* Tarjeta estilo ficha */
+    .clinic-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        color: #0f172a;
+        font-size: 1.25rem;
+        font-weight: 700;
+        border-bottom: 2px solid #0284c7; /* Azul corporativo para doctores */
+        padding-bottom: 8px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    .form-label-custom {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        color: #64748b;
+        font-weight: 700;
+        margin-bottom: 5px;
+        letter-spacing: 0.5px;
+    }
+
+    .form-control-custom {
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        padding: 10px 14px;
+        font-size: 0.95rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+        .form-control-custom:focus {
+            border-color: #0284c7;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+            outline: none;
+        }
+
+    .btn-medical {
+        background-color: #0284c7;
+        color: white;
+        border: 1px solid #0284c7;
+        border-radius: 6px;
+        font-weight: 600;
+        padding: 12px 24px;
+        transition: background-color 0.2s;
+    }
+
+        .btn-medical:hover {
+            background-color: #0369a1;
+            color: white;
+            box-shadow: 0 4px 6px rgba(2, 132, 199, 0.1);
+        }
+
+    .btn-outline-cancel {
+        color: #64748b;
+        border: 1px solid #cbd5e1;
+        background-color: transparent;
+        font-weight: 600;
+        border-radius: 6px;
+        padding: 12px 24px;
+        transition: all 0.2s;
+    }
+
+        .btn-outline-cancel:hover {
+            background-color: #f1f5f9;
+            color: #334155;
+        }
+</style>
+
+<div class="container py-4">
+    <!-- Enlace de regreso al directorio -->
+    <a asp-action="Index" class="back-link">
+        &larr; Volver al Directorio Médico
+    </a>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="clinic-card">
+                <h3 class="section-title">Registrar Nuevo Médico</h3>
+
+                <form asp-action="Agregar" method="post">
+                    <!-- Fila 1: Nombre del Médico -->
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label asp-for="Nombre" class="form-label-custom">Nombre Completo</label>
+                            <input asp-for="Nombre" type="text" class="form-control form-control-custom w-100" placeholder="Ej. Carlos Reyes" required />
+                        </div>
+                    </div>
+
+                    <!-- Fila 2: Especialidad y Licencia -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Especialidad" class="form-label-custom">Especialidad</label>
+                            <input asp-for="Especialidad" type="text" class="form-control form-control-custom" placeholder="Ej. Pediatría" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="NumeroLicencia" class="form-label-custom">Número de Licencia</label>
+                            <input asp-for="NumeroLicencia" type="text" class="form-control form-control-custom" placeholder="Ej. PD - 20835" required />
+                        </div>
+                    </div>
+
+                    <!-- Acciones del Formulario -->
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top" style="border-top: 1px solid #f1f5f9 !important;">
+                        <a asp-action="Index" class="btn btn-outline-cancel px-4 py-2 me-2">
+                            Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-medical px-4 py-2">
+                            Guardar Médico
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
