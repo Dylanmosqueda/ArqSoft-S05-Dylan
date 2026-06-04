@@ -1,0 +1,202 @@
+﻿@model IEnumerable<CitasApp.Models.Paciente>
+@* Asegúrate de que el espacio de nombres de arriba coincida con tu modelo de Paciente *@
+
+<style>
+    /* 1. AJUSTES DEL FOOTER Y ESPACIADOS */
+    footer, .footer {
+        background-color: #ffffff !important;
+        border-top: 1px solid #e2e8f0 !important;
+        padding: 15px 0 !important;
+    }
+
+    main {
+        margin-bottom: 20px !important;
+        padding-bottom: 20px !important;
+    }
+
+    /* 2. Fondo Global - Estilo Hospitalario Limpio */
+    body {
+        background-color: #f8fafc !important;
+        color: #1e293b;
+        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #0284c7, #0d9488);
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+    /* 3. BANNER DEL PORTAL DE SALUD */
+    .clinic-header-container {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+        margin-bottom: 30px;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        border-bottom: 4px solid #0d9488;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+    }
+
+    .clinic-pulse-effect {
+        position: absolute;
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        background: radial-gradient(circle at center, rgba(13, 148, 136, 0.15) 0%, rgba(2, 132, 199, 0.05) 50%, transparent 70%);
+        animation: pulseWave 3s infinite alternate;
+        z-index: 1;
+        pointer-events: none;
+    }
+    @@keyframes pulseWave {
+        0% {
+            transform: scale(0.9);
+            opacity: 0.5;
+        }
+
+        100% {
+            transform: scale(1.15);
+            opacity: 0.9;
+        }
+    }
+
+    .main-title {
+        color: #0f172a;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        z-index: 2;
+        position: relative;
+    }
+
+    /* 4. Tarjetas estilo expediente clínico */
+    .card-patient {
+        background-color: #ffffff !important;
+        color: #1e293b !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 8px !important;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+        .card-patient:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(2, 132, 199, 0.12) !important;
+            border-color: #0284c7 !important;
+        }
+
+    .card-patient-body {
+        background-color: #ffffff !important;
+        border-top: 3px solid #0d9488;
+        border-radius: 0 0 8px 8px;
+        padding: 1.5rem;
+    }
+
+    .btn-medical {
+        background-color: #0284c7;
+        color: white;
+        border: 1px solid #0284c7;
+        border-radius: 4px;
+        font-weight: 600;
+        transition: background-color 0.2s;
+    }
+
+        .btn-medical:hover {
+            background-color: #0369a1;
+            color: white;
+            box-shadow: 0 4px 6px rgba(2, 132, 199, 0.1);
+        }
+
+    .btn-outline-medical {
+        color: #0d9488;
+        border: 2px solid #0d9488;
+        background-color: transparent;
+        font-weight: 600;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+
+        .btn-outline-medical:hover {
+            color: white;
+            background-color: #0d9488;
+        }
+</style>
+
+<div class="clinic-header-container shadow-sm">
+    <div class="clinic-pulse-effect"></div>
+
+    <div style="z-index: 2; text-align: center; background: rgba(255,255,255,0.05); padding: 20px 30px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+        <h1 class="main-title" style="color: #ffffff; letter-spacing: 2px; font-size: 2.2rem; margin: 0;">
+            PORTAL MÉDICO - CITASAPP
+        </h1>
+        <p style="color: #38bdf8; font-weight: bold; letter-spacing: 1px; margin-top: 10px; margin-bottom: 0;">
+            [ SISTEMA DE GESTIÓN Y EXPEDIENTES DE PACIENTES ]
+        </p>
+    </div>
+</div>
+
+<h1 class="text-center my-4 main-title" style="font-size: 1.8rem; color: #1e293b;">Catálogo de Pacientes</h1>
+
+<div class="text-center mb-5">
+    <a asp-action="Index" class="btn btn-medical btn-sm mx-1 px-4 py-2">Todos</a>
+    @if (ViewBag.Generos != null)
+    {
+        foreach (var gen in ViewBag.Generos as List<string>)
+        {
+            <a asp-action="Index" asp-route-genero="@gen" class="btn btn-outline-medical btn-sm mx-1 px-3 py-2">@gen</a>
+        }
+    }
+</div>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card card-patient h-100 border-0">
+                <img src="@(item.GetType().GetProperty("ImagenUrl") != null ? item.GetType().GetProperty("ImagenUrl").GetValue(item) : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png")"
+                     class="card-img-top p-4"
+                     alt="@item.Nombre"
+                     style="height: 180px; object-fit: contain; background-color: #f8fafc;">
+
+                <div class="card-patient-body text-center">
+                    <h5 class="card-title fw-bold text-dark" style="font-size: 1.2rem;">@item.Nombre @item.Apellido</h5>
+
+                    <!-- Se corrigió el cierre de la etiqueta span -->
+                    <span class="badge mb-3" style="background-color: #0d9488; border: 1px solid #115e59; font-size: 0.85rem; padding: 6px 12px; border-radius: 20px;">
+                        Paciente Registrado
+                    </span>
+
+                    <p class="small text-muted mb-3">
+                        F. DE NACIMIENTO:
+                        <strong class="text-primary">
+                            @(item.GetType().GetProperty("FechaNacimiento") != null ? string.Format("{0:dd/MM/yyyy}", item.GetType().GetProperty("FechaNacimiento").GetValue(item)) : "No registrado")
+                        </strong>
+                    </p>
+
+                    <a asp-action="Detalle" asp-route-id="@item.Id" class="btn btn-medical btn-sm w-100 mt-2">
+                        Ver Expediente Clínico
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<hr style="border-color: #e2e8f0; margin: 40px 0;" />
+
+<div class="text-center mb-5 mt-4 pb-5">
+    <a asp-action="Agregar" class="btn btn-outline-medical btn-lg shadow-sm" style="border-width: 2px; font-weight: 700; padding: 12px 30px;">
+        + REGISTRAR PACIENTE
+    </a>
+</div>

@@ -1,0 +1,296 @@
+﻿@model CitasApp.Models.Cita
+
+<style>
+    /* Estilos Clínicos Coherentes con el Portal */
+    body {
+        background-color: #f8fafc !important;
+        color: #1e293b;
+        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #0284c7, #0d9488);
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+    /* Enlace de retorno */
+    .back-link {
+        color: #0284c7;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 25px;
+        transition: color 0.2s;
+    }
+
+        .back-link:hover {
+            color: #0369a1;
+            text-decoration: underline;
+        }
+
+    /* Contenedor estilo ficha médica */
+    .clinic-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        color: #0f172a;
+        font-size: 1.25rem;
+        font-weight: 700;
+        border-bottom: 2px solid #0d9488;
+        padding-bottom: 8px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    /* Variaciones de badges según el estado de la cita */
+    .badge-scheduled {
+        background-color: #e0f2fe;
+        color: #0369a1;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    .badge-completed {
+        background-color: #dcfce7;
+        color: #15803d;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    .badge-canceled {
+        background-color: #fee2e2;
+        color: #b91c1c;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    /* Tipografía de etiquetas y valores */
+    .detail-label {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        color: #64748b;
+        font-weight: 700;
+        margin-bottom: 3px;
+        letter-spacing: 0.5px;
+    }
+
+    .detail-value {
+        font-size: 1rem;
+        color: #1e293b;
+        margin-bottom: 18px;
+        font-weight: 500;
+    }
+
+    /* Botones */
+    .btn-medical {
+        background-color: #0284c7;
+        color: white;
+        border: 1px solid #0284c7;
+        border-radius: 4px;
+        font-weight: 600;
+        transition: background-color 0.2s;
+    }
+
+        .btn-medical:hover {
+            background-color: #0369a1;
+            color: white;
+            box-shadow: 0 4px 6px rgba(2, 132, 199, 0.1);
+        }
+
+    .btn-outline-danger-medical {
+        color: #ef4444;
+        border: 1px solid #fca5a5;
+        background-color: transparent;
+        font-weight: 600;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+
+        .btn-outline-danger-medical:hover {
+            background-color: #fef2f2;
+            border-color: #ef4444;
+        }
+</style>
+
+<div class="container py-4">
+    <!-- Botón de regreso -->
+    <a asp-action="Index" class="back-link">
+        &larr; Volver al Panel de Citas
+    </a>
+
+    <div class="row">
+        <!-- Columna Izquierda: Información General de la Cita -->
+        <div class="col-lg-4">
+            <div class="clinic-card text-center">
+                <div class="border-bottom pb-3 mb-3">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3652/3652191.png" alt="Agenda" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 15px;" />
+                    <h4 class="font-weight-bold" style="color: #0f172a;">Detalle de Cita</h4>
+
+                    @{
+                        var estado = Model.GetType().GetProperty("Estado")?.GetValue(Model)?.ToString() ?? "Pendiente";
+                        var badgeClass = "badge-scheduled";
+                        if (estado == "Completada" || estado == "Finalizada" || estado == "Confirmado")
+                        {
+                            badgeClass = "badge-completed";
+                        }
+                        else if (estado == "Cancelada")
+                        {
+                            badgeClass = "badge-canceled";
+                        }
+                    }
+                    <span class="@badgeClass">@estado</span>
+                </div>
+
+                <div class="text-start">
+                    <div class="detail-label">ID de Registro</div>
+                    <div class="detail-value">#@Model.Id</div>
+
+                    <div class="detail-label">Fecha Programada</div>
+                    <div class="detail-value" style="font-weight: 700; color: #0284c7;">
+                        @{
+                            var fechaVal = Model.GetType().GetProperty("Fecha")?.GetValue(Model);
+                            string fechaStr = "Fecha No Registrada";
+                            if (fechaVal != null)
+                            {
+                                if (fechaVal is DateOnly dateOnly)
+                                {
+                                    fechaStr = dateOnly.ToString("dd/MM/yyyy");
+                                }
+                                else
+                                {
+                                    fechaStr = string.Format("{0:dd/MM/yyyy}", fechaVal);
+                                }
+                            }
+                        }
+                        @fechaStr
+                    </div>
+
+                    <div class="detail-label">Hora Agendada</div>
+                    <div class="detail-value" style="font-weight: 700; color: #0d9488;">
+                        @{
+                            var horaVal = Model.GetType().GetProperty("Hora")?.GetValue(Model);
+                            string horaStr = "Hora No Registrada";
+                            if (horaVal != null)
+                            {
+                                if (horaVal is TimeOnly timeOnly)
+                                {
+                                    horaStr = timeOnly.ToString("HH:mm");
+                                }
+                                else
+                                {
+                                    horaStr = string.Format("{0:HH:mm}", horaVal);
+                                }
+                            }
+                        }
+                        @horaStr
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Columna Derecha: Información Profesional y Médica -->
+        <div class="col-lg-8">
+            <div class="clinic-card">
+                <h3 class="section-title">Información del Paciente y Especialista</h3>
+
+                <div class="row">
+                    <!-- Paciente -->
+                    <div class="col-md-6">
+                        <div class="detail-label">Paciente Asignado</div>
+                        <div class="detail-value" style="font-weight: 600;">
+                            @{
+                                var pacienteObj = Model.GetType().GetProperty("Paciente")?.GetValue(Model);
+                                string pacienteNombre = "Ana";
+                                if (pacienteObj != null)
+                                {
+                                    var nom = pacienteObj.GetType().GetProperty("Nombre")?.GetValue(pacienteObj)?.ToString();
+                                    var ape = pacienteObj.GetType().GetProperty("Apellido")?.GetValue(pacienteObj)?.ToString();
+                                    pacienteNombre = $"{nom} {ape}".Trim();
+                                }
+                            }
+                            @pacienteNombre
+                        </div>
+                    </div>
+
+                    <!-- Médico Tratante -->
+                    <div class="col-md-6">
+                        <div class="detail-label">Médico Tratante</div>
+                        <div class="detail-value" style="font-weight: 600;">
+                            @{
+                                var medicoObj = Model.GetType().GetProperty("Medico")?.GetValue(Model);
+                                string medicoNombre = "Dr. Carlos Reyes";
+                                string especialidad = "Medicina General";
+                                if (medicoObj != null)
+                                {
+                                    medicoNombre = medicoObj.GetType().GetProperty("Nombre")?.GetValue(medicoObj)?.ToString() ?? "No asignado";
+                                    especialidad = medicoObj.GetType().GetProperty("Especialidad")?.GetValue(medicoObj)?.ToString() ?? "";
+                                }
+                            }
+                            @medicoNombre @(!string.IsNullOrEmpty(especialidad) ? $"({especialidad})" : "")
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-title">Detalles Adicionales de la Consulta</h3>
+
+                <div class="row">
+                    <!-- Consultorio -->
+                    <div class="col-md-6">
+                        <div class="detail-label">Consultorio Asignado</div>
+                        <div class="detail-value">
+                            @(Model.GetType().GetProperty("Consultorio") != null ? Model.GetType().GetProperty("Consultorio").GetValue(Model) : "N/A")
+                        </div>
+                    </div>
+
+                    <!-- Motivo -->
+                    <div class="col-md-6">
+                        <div class="detail-label">Motivo de la Cita</div>
+                        <div class="detail-value text-muted" style="line-height: 1.6;">
+                            @(Model.GetType().GetProperty("Motivo") != null ? Model.GetType().GetProperty("Motivo").GetValue(Model) : "Consulta estándar o de rutina")
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Observaciones -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="detail-label">Observaciones Adicionales / Diagnóstico Inicial</div>
+                        <div class="detail-value text-muted" style="line-height: 1.6; font-size: 0.95rem;">
+                            @(Model.GetType().GetProperty("Observaciones") != null ? Model.GetType().GetProperty("Observaciones").GetValue(Model) : "No hay observaciones o notas adicionales registradas en esta cita.")
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acciones del Registro -->
+                <div class="d-flex justify-content-end gap-2 mt-4 pt-4 border-top" style="border-top: 1px solid #f1f5f9 !important;">
+                    <a asp-action="Editar" asp-route-id="@Model.Id" class="btn btn-medical px-4 py-2" style="margin-right: 10px;">
+                        Editar Cita
+                    </a>
+                    <a asp-action="Eliminar" asp-route-id="@Model.Id" class="btn btn-outline-danger-medical px-4 py-2">
+                        Cancelar Cita
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,326 @@
+﻿@model IEnumerable<CitasApp.Models.Cita>
+
+@{
+    // Convertimos de forma segura los ViewBag en listas locales para realizar la búsqueda
+    var pacientesList = ViewBag.Pacientes as List<CitasApp.Models.Paciente>;
+    var medicosList = ViewBag.Medicos as List<CitasApp.Models.Medico>;
+}
+
+<style>
+    /* Estilos Clínicos Coherentes con el Portal */
+    body {
+        background-color: #f8fafc !important;
+        color: #1e293b;
+        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #0284c7, #0d9488);
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+    /* 1. HEADER DE CONTROL */
+    .clinic-header-container {
+        position: relative;
+        height: 220px;
+        overflow: hidden;
+        margin-bottom: 30px;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        border-bottom: 4px solid #0d9488;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+    }
+
+    .clinic-pulse-effect {
+        position: absolute;
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        background: radial-gradient(circle at center, rgba(13, 148, 136, 0.15) 0%, rgba(2, 132, 199, 0.05) 50%, transparent 70%);
+        animation: pulseWave 3s infinite alternate;
+        z-index: 1;
+        pointer-events: none;
+    }
+     @@keyframes pulseWave {
+        0% { transform: scale(0.9); opacity: 0.5; }
+        100% { transform: scale(1.15); opacity: 0.9; }
+    }
+
+    .main-title {
+        color: #0f172a;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        z-index: 2;
+        position: relative;
+    }
+
+    /* 2. TABLA CLÍNICA ADAPTADA */
+    .clinic-table-container {
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        padding: 24px;
+        margin-bottom: 30px;
+        overflow-x: auto;
+    }
+
+    .table-clinic {
+        width: 100%;
+        margin-bottom: 0;
+        background-color: transparent;
+    }
+
+    .table-clinic th {
+        background-color: #f1f5f9 !important;
+        color: #475569 !important;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+        padding: 12px 16px;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .table-clinic td {
+        padding: 14px 16px;
+        border-bottom: 1px solid #e2e8f0;
+        color: #1e293b;
+        font-size: 0.95rem;
+        vertical-align: middle;
+    }
+
+    .table-clinic tbody tr:hover {
+        background-color: #f8fafc;
+    }
+
+    /* Etiquetas de Estado */
+    .badge-scheduled {
+        background-color: #e0f2fe;
+        color: #0369a1;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .badge-completed {
+        background-color: #dcfce7;
+        color: #15803d;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .badge-canceled {
+        background-color: #fee2e2;
+        color: #b91c1c;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    /* Botones */
+    .btn-medical {
+        background-color: #0284c7;
+        color: white;
+        border: 1px solid #0284c7;
+        border-radius: 4px;
+        font-weight: 600;
+        transition: background-color 0.2s;
+    }
+    .btn-medical:hover {
+        background-color: #0369a1;
+        color: white;
+    }
+
+    .btn-outline-medical {
+        color: #0d9488;
+        border: 2px solid #0d9488;
+        background-color: transparent;
+        font-weight: 600;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+    .btn-outline-medical:hover {
+        color: white;
+        background-color: #0d9488;
+    }
+</style>
+
+<!-- HEADER ANIMADO "PANEL DE CONTROL DE CITAS" -->
+<div class="clinic-header-container shadow-sm">
+    <div class="clinic-pulse-effect"></div>
+
+    <div style="z-index: 2; text-align: center; background: rgba(255,255,255,0.05); padding: 20px 30px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+        <h1 class="main-title" style="color: #ffffff; letter-spacing: 2px; font-size: 2.2rem; margin: 0;">
+            PANEL DE CITAS - CITASAPP
+        </h1>
+        <p style="color: #38bdf8; font-weight: bold; letter-spacing: 1px; margin-top: 10px; margin-bottom: 0;">
+            [ REGISTRO, CONTROL Y ADMINISTRACIÓN CLÍNICA GENERAL ]
+        </p>
+    </div>
+</div>
+
+<h1 class="text-center my-4 main-title" style="font-size: 1.8rem; color: #1e293b;">Administración de Citas</h1>
+
+<!-- Filtros de Estado -->
+<div class="text-center mb-5">
+    <a asp-action="Index" class="btn btn-medical btn-sm mx-1 px-4 py-2">Todas las Citas</a>
+    @if (ViewBag.Estados != null)
+    {
+        foreach (var est in ViewBag.Estados as List<string>)
+        {
+            <a asp-action="Index" asp-route-estado="@est" class="btn btn-outline-medical btn-sm mx-1 px-3 py-2">@est</a>
+        }
+    }
+</div>
+
+<!-- Tabla de Registros -->
+<div class="clinic-table-container">
+    <table class="table table-clinic align-middle">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Paciente</th>
+                <th>Médico Tratante</th>
+                <th>Motivo</th>
+                <th>Estado</th>
+                <th class="text-end">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                // Unificamos de forma segura toda la lógica de C# al inicio del bucle
+                string pacienteNombre = "No registrado";
+                string medicoNombre = "No registrado";
+                string estado = "Pendiente";
+                string badgeClass = "badge-scheduled";
+                string fechaStr = "Fecha No Registrada";
+                string horaStr = "Hora No Registrada";
+
+                {
+                    // 1. Obtener Paciente
+                    if (pacientesList != null)
+                    {
+                        var pac = pacientesList.FirstOrDefault(p => p.Id == item.PacienteId);
+                        if (pac != null)
+                        {
+                            pacienteNombre = $"{pac.Nombre} {pac.Apellido}".Trim();
+                        }
+                    }
+
+                    // 2. Obtener Médico
+                    if (medicosList != null)
+                    {
+                        var med = medicosList.FirstOrDefault(m => m.Id == item.MedicoId);
+                        if (med != null)
+                        {
+                            medicoNombre = med.Nombre;
+                        }
+                    }
+
+                    // 3. Determinar Estado y Badge
+                    var propEstado = item.GetType().GetProperty("Estado");
+                    if (propEstado != null)
+                    {
+                        estado = propEstado.GetValue(item)?.ToString() ?? "Pendiente";
+                    }
+
+                    if (estado == "Completada" || estado == "Finalizada" || estado == "Confirmada")
+                    {
+                        badgeClass = "badge-completed";
+                    }
+                    else if (estado == "Cancelada")
+                    {
+                        badgeClass = "badge-canceled";
+                    }
+
+                    // 4. Formatear Fecha
+                    var fechaVal = item.GetType().GetProperty("Fecha")?.GetValue(item);
+                    if (fechaVal != null)
+                    {
+                        if (fechaVal is DateOnly dateOnly)
+                        {
+                            fechaStr = dateOnly.ToString("dd-MM-yyyy");
+                        }
+                        else
+                        {
+                            fechaStr = string.Format("{0:dd-MM-yyyy}", fechaVal);
+                        }
+                    }
+
+                    // 5. Formatear Hora
+                    var horaVal = item.GetType().GetProperty("Hora")?.GetValue(item);
+                    if (horaVal != null)
+                    {
+                        if (horaVal is TimeOnly timeOnly)
+                        {
+                            horaStr = timeOnly.ToString("HH:mm");
+                        }
+                        else
+                        {
+                            horaStr = string.Format("{0:HH:mm}", horaVal);
+                        }
+                    }
+                }
+
+                <tr>
+                    <!-- Fecha -->
+                    <td class="fw-semibold">@fechaStr</td>
+
+                    <!-- Hora -->
+                    <td class="fw-semibold">@horaStr</td>
+
+                    <!-- Paciente -->
+                    <td>@pacienteNombre</td>
+
+                    <!-- Médico -->
+                    <td>@medicoNombre</td>
+
+                    <!-- Motivo -->
+                    <td>
+                        @(item.GetType().GetProperty("Motivo") != null ? item.GetType().GetProperty("Motivo").GetValue(item) : "")
+                    </td>
+
+                    <!-- Estado -->
+                    <td>
+                        <span class="@badgeClass">@estado</span>
+                    </td>
+
+                    <!-- Acciones -->
+                    <td class="text-end">
+                        <a asp-action="Detalle" asp-route-id="@item.Id" class="btn btn-medical btn-sm px-3">
+                            Ver Detalles
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<hr style="border-color: #e2e8f0; margin: 40px 0;" />
+
+<!-- Botón de Registro de nueva cita -->
+<div class="text-center mb-5 mt-4 pb-5">
+    <a asp-action="Agregar" class="btn btn-outline-medical btn-lg shadow-sm" style="border-width: 2px; font-weight: 700; padding: 12px 30px;">
+        + AGENDAR NUEVA CITA
+    </a>
+</div>
