@@ -7,129 +7,248 @@
 
 <style>
     body {
-        background-color: #f8fafc !important;
-        color: #1e293b;
-        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        background-color: #0a0a0a !important;
+        color: #d1c7bd;
+        font-family: 'Courier New', Courier, monospace;
     }
 
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #0284c7, #0d9488);
-            z-index: 9999;
-            pointer-events: none;
-        }
-
     .back-link {
-        color: #0284c7;
+        color: #8b0000;
         text-decoration: none;
-        font-weight: 600;
+        font-weight: bold;
         display: inline-flex;
         align-items: center;
         margin-bottom: 25px;
-        transition: color 0.2s;
+        transition: color 0.3s, text-shadow 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
 
         .back-link:hover {
-            color: #0369a1;
-            text-decoration: underline;
+            color: #ff0000;
+            text-shadow: 0 0 8px #ff0000;
         }
 
     .clinic-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        background: #121212;
+        border: 2px solid #3a1f1f;
+        border-radius: 4px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), inset 0 0 15px rgba(139, 0, 0, 0.15);
         padding: 30px;
         margin-bottom: 30px;
     }
 
     .section-title {
-        color: #0f172a;
-        font-size: 1.25rem;
-        font-weight: 700;
-        border-bottom: 2px solid #0d9488;
+        color: #8b0000;
+        font-size: 1.4rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border-bottom: 2px solid #5a0000;
         padding-bottom: 8px;
         margin-top: 10px;
         margin-bottom: 20px;
     }
 
     .form-label-custom {
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         text-transform: uppercase;
-        color: #64748b;
-        font-weight: 700;
+        color: #8a8075;
+        font-weight: bold;
         margin-bottom: 5px;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
     }
 
     .form-control-custom {
-        border: 1px solid #cbd5e1;
-        border-radius: 6px;
+        background-color: #1a1a1a;
+        color: #f1f1f1;
+        border: 1px solid #4a2c2c;
+        border-radius: 2px;
         padding: 10px 14px;
         font-size: 0.95rem;
         transition: border-color 0.2s, box-shadow 0.2s;
     }
 
+        .form-control-custom option {
+            background-color: #121212;
+            color: #d1c7bd;
+        }
+
+        .form-control-custom::placeholder {
+            color: #554a42;
+        }
+
         .form-control-custom:focus {
-            border-color: #0284c7;
-            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+            background-color: #1f1111;
+            border-color: #ff0000;
+            color: #ffcccc;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
             outline: none;
         }
 
     .btn-medical {
-        background-color: #0284c7;
-        color: white;
-        border: 1px solid #0284c7;
-        border-radius: 6px;
-        font-weight: 600;
+        background-color: #8b0000;
+        color: #ffffff;
+        border: 1px solid #5a0000;
+        border-radius: 2px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
         padding: 12px 24px;
-        transition: background-color 0.2s;
+        transition: all 0.3s;
     }
 
         .btn-medical:hover {
-            background-color: #0369a1;
-            color: white;
-            box-shadow: 0 4px 6px rgba(2, 132, 199, 0.1);
+            background-color: #ff0000;
+            color: #000000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+            border-color: #ff0000;
         }
 
     .btn-outline-cancel {
-        color: #64748b;
-        border: 1px solid #cbd5e1;
-        background-color: transparent;
-        font-weight: 600;
-        border-radius: 6px;
+        color: #8a8075;
+        border: 1px solid #444;
+        background-color: #1e1e1e;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        border-radius: 2px;
         padding: 12px 24px;
-        transition: all 0.2s;
+        transition: all 0.3s;
     }
 
         .btn-outline-cancel:hover {
-            background-color: #f1f5f9;
-            color: #334155;
+            background-color: #2a2a2a;
+            color: #ffffff;
         }
+
+    .screen-shake {
+        animation: extremeShake 0.15s infinite;
+    }
+
+    @@keyframes extremeShake {
+        0% {
+            transform: translate(1px, 1px) rotate(0deg);
+        }
+
+        10% {
+            transform: translate(-1px, -2px) rotate(-1deg);
+        }
+
+        20% {
+            transform: translate(-3px, 0px) rotate(1deg);
+        }
+
+        30% {
+            transform: translate(0px, 2px) rotate(0deg);
+        }
+
+        45% {
+            transform: translate(1px, -1px) rotate(1deg);
+        }
+
+        50% {
+            transform: translate(-1px, 2px) rotate(-1deg);
+        }
+
+        60% {
+            transform: translate(-3px, 1px) rotate(0deg);
+        }
+
+        75% {
+            transform: translate(2px, 1px) rotate(-1deg);
+        }
+
+        80% {
+            transform: translate(-1px, -1px) rotate(1deg);
+        }
+
+        90% {
+            transform: translate(2px, 2px) rotate(0deg);
+        }
+
+        100% {
+            transform: translate(1px, -2px) rotate(-1deg);
+        }
+    }
+
+    .trap-timer-container {
+        background-color: #050505;
+        border: 2px solid #5a0000;
+        padding: 20px;
+        margin-bottom: 25px;
+        text-align: center;
+        border-radius: 4px;
+        box-shadow: 0 0 15px rgba(139, 0, 0, 0.4);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .timer-spiral-bg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 130px;
+        height: 130px;
+        transform: translate(-50%, -50%) rotate(0deg);
+        opacity: 0.12;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M 50 50 C 49 47, 53 47, 53 51 C 53 56, 46 56, 45 49 C 44 40, 56 39, 58 49 C 60 62, 41 63, 38 49 C 34 31, 59 28, 63 47 C 67 71, 33 71, 29 48 C 23 18, 67 13, 71 47 C 76 83, 21 82, 16 46' fill='none' stroke='%23ff0000' stroke-width='4' stroke-linecap='round'/></svg>");
+        background-size: contain;
+        background-repeat: no-repeat;
+        pointer-events: none;
+        z-index: 1;
+        animation: spinTimerSpiral 12s linear infinite;
+    }
+
+    @@keyframes spinTimerSpiral {
+        100% {
+            transform: translate(-50%, -50%) rotate(360deg);
+        }
+    }
+
+    .timer-display {
+        font-size: 2.2rem;
+        font-weight: bold;
+        color: #ff0000;
+        text-shadow: 0 0 10px #ff0000;
+        letter-spacing: 3px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .timer-alert {
+        font-size: 0.8rem;
+        color: #8a8075;
+        text-transform: uppercase;
+        margin-top: 5px;
+        letter-spacing: 2px;
+        position: relative;
+        z-index: 2;
+    }
 </style>
 
 <div class="container py-4">
     <a asp-action="Index" class="back-link">
-        &larr; Volver al Panel de Citas
+        &larr; Volver al Panel de Sesiones
     </a>
 
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="clinic-card">
-                <h3 class="section-title">Agendar Nueva Cita Médica</h3>
+                <div class="trap-timer-container">
+                    <div class="timer-spiral-bg" id="timerSpiral"></div>
+                    <div class="timer-display" id="jigsawTimer">01:00</div>
+                    <div class="timer-alert" id="timerStatus">TIEMPO PARA CONFIRMAR LA SESIÓN</div>
+                </div>
+
+                <h3 class="section-title">Programar Nuevo Encuentro / Sesión</h3>
 
                 <form asp-action="Agregar" method="post">
-                    <!-- Fila 1: Paciente y Médico -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label asp-for="PacienteId" class="form-label-custom">Paciente</label>
+                            <label asp-for="PacienteId" class="form-label-custom">Sujeto bajo Prueba</label>
                             <select asp-for="PacienteId" class="form-select form-control-custom w-100" required>
-                                <option value="">-- Seleccionar Paciente --</option>
+                                <option value="">-- Seleccionar Sujeto --</option>
                                 @if (pacientesList != null)
                                 {
                                     foreach (var p in pacientesList)
@@ -140,9 +259,9 @@
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label asp-for="MedicoId" class="form-label-custom">Médico Tratante</label>
+                            <label asp-for="MedicoId" class="form-label-custom">Supervisor / Tratante</label>
                             <select asp-for="MedicoId" class="form-select form-control-custom w-100" required>
-                                <option value="">-- Seleccionar Médico --</option>
+                                <option value="">-- Seleccionar Supervisor --</option>
                                 @if (medicosList != null)
                                 {
                                     foreach (var m in medicosList)
@@ -154,10 +273,9 @@
                         </div>
                     </div>
 
-                    <!-- Fila 2: Fecha y Hora -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label asp-for="Fecha" class="form-label-custom">Fecha de la Cita</label>
+                            <label asp-for="Fecha" class="form-label-custom">Fecha del Encuentro</label>
                             <input asp-for="Fecha" type="date" class="form-control form-control-custom" required />
                         </div>
                         <div class="col-md-6 mb-3">
@@ -166,10 +284,9 @@
                         </div>
                     </div>
 
-                    <!-- Fila 3: Estado -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label asp-for="Estado" class="form-label-custom">Estado Inicial</label>
+                            <label asp-for="Estado" class="form-label-custom">Estado de la Sesión</label>
                             <select asp-for="Estado" class="form-select form-control-custom w-100" required>
                                 <option value="Pendiente">Pendiente</option>
                                 <option value="Confirmada">Confirmada</option>
@@ -178,21 +295,19 @@
                         </div>
                     </div>
 
-                    <!-- Fila 4: Motivo -->
                     <div class="row">
                         <div class="col-12 mb-4">
-                            <label asp-for="Motivo" class="form-label-custom">Motivo de la Cita</label>
-                            <textarea asp-for="Motivo" class="form-control form-control-custom" rows="3" placeholder="Escribe brevemente el motivo de la consulta..." required></textarea>
+                            <label asp-for="Motivo" class="form-label-custom">Propósito / Motivo de la Sesión</label>
+                            <textarea asp-for="Motivo" class="form-control form-control-custom" rows="3" placeholder="Registra la prueba o el motivo del encuentro..." required></textarea>
                         </div>
                     </div>
 
-                    <!-- Acciones del Formulario -->
-                    <div class="d-flex justify-content-end gap-2 pt-3 border-top" style="border-top: 1px solid #f1f5f9 !important;">
+                    <div class="d-flex justify-content-end gap-2 pt-3 border-top" style="border-top: 1px solid #3a1f1f !important;">
                         <a asp-action="Index" class="btn btn-outline-cancel px-4 py-2 me-2">
-                            Cancelar
+                            Desistir
                         </a>
                         <button type="submit" class="btn btn-medical px-4 py-2">
-                            Guardar Cita
+                            Fijar Encuentro
                         </button>
                     </div>
                 </form>
@@ -200,3 +315,43 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let timeLeft = 60;
+        const timerDisplay = document.getElementById("jigsawTimer");
+        const timerStatus = document.getElementById("timerStatus");
+        const timerSpiral = document.getElementById("timerSpiral");
+        const container = document.querySelector(".container");
+
+        const interval = setInterval(function () {
+            timeLeft--;
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+
+            timerDisplay.textContent = `${minutes}:${seconds}`;
+
+            if (timeLeft <= 15 && timeLeft > 0) {
+                timerDisplay.style.color = "#ff3333";
+                timerDisplay.style.textShadow = "0 0 20px #ff0000";
+                timerStatus.textContent = "ALERTA: LA TRAMPA SE ACTIVARÁ PRONTO";
+                timerStatus.style.color = "#ff3333";
+
+                // La espiral acelera y brilla más
+                timerSpiral.style.animationDuration = "2.5s";
+                timerSpiral.style.opacity = "0.38";
+                timerSpiral.style.filter = "drop-shadow(0 0 8px #ff0000)";
+            }
+
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                timerDisplay.textContent = "00:00";
+                timerStatus.textContent = "TIEMPO AGOTADO - ENCUENTRO BLOQUEADO";
+                container.classList.add("screen-shake");
+            }
+        }, 1000);
+    });
+</script>

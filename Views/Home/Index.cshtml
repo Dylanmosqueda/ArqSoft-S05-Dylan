@@ -1,8 +1,208 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Inicio - El Juego del Tiempo";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    /* Efecto de pantalla de TV vieja */
+    .terminal-box {
+        background-color: #0d0d0d;
+        border: 2px solid #4a0000;
+        border-radius: 4px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.95), inset 0 0 30px rgba(255, 0, 0, 0.2);
+        padding: 50px 40px;
+        margin-top: 50px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        /* Animación de Estática Analógica de TV */
+        .terminal-box::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 6px, 6px 100%;
+            pointer-events: none;
+            animation: staticNoise 0.15s infinite;
+        }
+
+    @@keyframes staticNoise {
+        0% {
+            transform: translate(0, 0);
+        }
+
+        50% {
+            transform: translate(-1px, 1px);
+        }
+
+        100% {
+            transform: translate(1px, -1px);
+        }
+    }
+
+    /* Espiral de Billy palpitante y distorsionada */
+    .spiral-icon-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+
+    .spiral-icon {
+        width: 90px;
+        height: 90px;
+        border: 4px dashed #8b0000;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        animation: pulseAndSpin 8s infinite ease-in-out;
+    }
+
+    @@keyframes pulseAndSpin {
+        0%, 100% {
+            transform: scale(1) rotate(0deg);
+            filter: brightness(1);
+        }
+
+        50% {
+            transform: scale(1.15) rotate(180deg);
+            filter: brightness(1.5) drop-shadow(0 0 15px #ff0000);
+        }
+    }
+
+    .spiral-inner {
+        width: 45px;
+        height: 45px;
+        border: 4px dashed #ff0000;
+        border-radius: 50%;
+        animation: spin-reverse 4s linear infinite;
+    }
+
+    @@keyframes spin-reverse {
+        100% {
+            transform: rotate(-360deg);
+        }
+    }
+
+    .terminal-title {
+        color: #ff0000;
+        font-size: 2.3rem;
+        font-weight: bold;
+        text-shadow: 0 0 12px #8b0000;
+        letter-spacing: 3px;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+        animation: textGlitch 1s infinite alternate;
+    }
+
+    /* Efecto de glitch de texto ocasional */
+    @@keyframes textGlitch {
+        0%, 90% {
+            transform: skew(0deg);
+            text-shadow: 0 0 8px #8b0000;
+        }
+
+        95% {
+            transform: skew(3deg);
+            text-shadow: -2px 0 #ff0000, 2px 0 #00ffff;
+        }
+
+        100% {
+            transform: skew(-2deg);
+            text-shadow: 2px 0 #ff0000, -2px 0 #00ffff;
+        }
+    }
+
+    .terminal-text {
+        color: #d1c7bd;
+        font-size: 1.15rem;
+        line-height: 1.8;
+        max-width: 700px;
+        margin: 0 auto 40px auto;
+        letter-spacing: 1px;
+    }
+
+    .btn-game {
+        background-color: #1a1a1a;
+        color: #ff3333;
+        border: 2px solid #8b0000;
+        padding: 14px 28px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        transition: all 0.3s;
+        display: inline-block;
+        margin: 10px;
+        border-radius: 2px;
+        text-decoration: none;
+    }
+
+        .btn-game:hover {
+            background-color: #ff0000;
+            color: #000000;
+            border-color: #ff0000;
+            box-shadow: 0 0 25px #ff0000;
+        }
+
+    .system-status {
+        font-size: 0.75rem;
+        color: #5a0000;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-top: 35px;
+        animation: alertBlink 1.5s infinite;
+    }
+
+    @@keyframes alertBlink {
+        0%, 100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.3;
+            color: #ff0000;
+        }
+    }
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-lg-10 text-center">
+        <div class="terminal-box">
+            <div class="spiral-icon-container">
+                <div class="spiral-icon">
+                    <div class="spiral-inner"></div>
+                </div>
+            </div>
+
+            <h1 class="terminal-title">¿Quieres jugar a un juego?</h1>
+
+            <p class="terminal-text">
+                La mayoría de las personas no valoran el tiempo que se les ha otorgado en este mundo... pero tú sí. No a partir de hoy. Cada registro, cada sesión y cada sujeto bajo tu supervisión forma parte de un engranaje mayor.
+                <br /><br />
+                La decisión es tuya. Toma el control de los parámetros.
+            </p>
+
+            <div class="pt-3">
+                <a asp-controller="Paciente" asp-action="Index" class="btn-game">
+                    Monitorear Pacientes
+                </a>
+                <a asp-controller="Medico" asp-action="Index" class="btn-game">
+                    Consultar Medicos
+                </a>
+                <a asp-controller="Cita" asp-action="Index" class="btn-game">
+                    Bitácora de Citas
+                </a>
+            </div>
+
+            <div class="system-status">
+                Estado del Dispositivo: Transmisión en Vivo // El tiempo corre...
+            </div>
+        </div>
+    </div>
 </div>

@@ -1,149 +1,209 @@
 ﻿@model CitasApp.Models.Medico
-@* Ajusta la directiva @model según el namespace exacto de tu entidad Medico *@
 
 <style>
-    /* Estilos Clínicos Coherentes con el Portal */
     body {
-        background-color: #f8fafc !important;
-        color: #1e293b;
-        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        background-color: #0a0a0a !important;
+        color: #d1c7bd;
+        font-family: 'Courier New', Courier, monospace;
     }
 
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #0284c7, #0d9488);
-            z-index: 9999;
-            pointer-events: none;
-        }
-
-    /* Enlace de retorno */
     .back-link {
-        color: #0284c7;
+        color: #8b0000;
         text-decoration: none;
-        font-weight: 600;
+        font-weight: bold;
         display: inline-flex;
         align-items: center;
         margin-bottom: 25px;
-        transition: color 0.2s;
+        transition: color 0.3s, text-shadow 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
 
         .back-link:hover {
-            color: #0369a1;
-            text-decoration: underline;
+            color: #ff0000;
+            text-decoration: none;
+            text-shadow: 0 0 8px #ff0000;
         }
 
-    /* Contenedores estilo ficha médica */
     .clinic-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        background: #121212;
+        border: 2px solid #3a1f1f;
+        border-radius: 4px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), inset 0 0 15px rgba(139, 0, 0, 0.15);
         padding: 30px;
         margin-bottom: 30px;
     }
 
     .section-title {
-        color: #0f172a;
-        font-size: 1.25rem;
+        color: #8b0000;
+        font-size: 1.3rem;
         font-weight: 700;
-        border-bottom: 2px solid #0284c7; /* Línea azul para doctores */
+        border-bottom: 2px solid #5a0000;
         padding-bottom: 8px;
         margin-top: 10px;
         margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
     }
 
     .avatar-container {
         text-align: center;
-        border-bottom: 1px solid #f1f5f9;
+        border-bottom: 1px solid #3a1f1f;
         padding-bottom: 20px;
         margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .avatar-container img {
+            filter: grayscale(75%) contrast(125%) brightness(90%);
+            border: 3px solid #8b0000 !important;
+            background-color: #1a1a1a !important;
+            box-shadow: 0 0 15px rgba(139, 0, 0, 0.3);
+            padding: 5px;
+            transition: filter 0.3s;
+            position: relative;
+            z-index: 2;
+        }
+
+            .avatar-container img:hover {
+                filter: grayscale(0%) contrast(110%);
+            }
+
+        /* Espiral Palpitante (Efecto Latido Doble) */
+        .avatar-container::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 170px;
+            height: 170px;
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.12;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M 50 50 C 49 47, 53 47, 53 51 C 53 56, 46 56, 45 49 C 44 40, 56 39, 58 49 C 60 62, 41 63, 38 49 C 34 31, 59 28, 63 47 C 67 71, 33 71, 29 48 C 23 18, 67 13, 71 47 C 76 83, 21 82, 16 46' fill='none' stroke='%23ff0000' stroke-width='4' stroke-linecap='round'/></svg>");
+            background-size: contain;
+            background-repeat: no-repeat;
+            pointer-events: none;
+            z-index: 1;
+            animation: heartbeatSpiral 2.5s infinite ease-in-out;
+        }
+
+    @@keyframes heartbeatSpiral {
+        0%, 100% {
+            transform: translate(-50%, -50%) scale(0.9);
+            opacity: 0.1;
+        }
+
+        14% {
+            transform: translate(-50%, -50%) scale(1.18);
+            opacity: 0.35;
+            filter: drop-shadow(0 0 8px rgba(255,0,0,0.5));
+        }
+
+        28% {
+            transform: translate(-50%, -50%) scale(1.0);
+            opacity: 0.2;
+        }
+
+        42% {
+            transform: translate(-50%, -50%) scale(1.24);
+            opacity: 0.38;
+            filter: drop-shadow(0 0 12px rgba(255,0,0,0.6));
+        }
+
+        70% {
+            transform: translate(-50%, -50%) scale(0.9);
+            opacity: 0.1;
+        }
     }
 
     .badge-specialty {
-        background-color: #0284c7;
-        color: white;
+        background-color: #5a0000;
+        color: #f1f1f1;
+        border: 1px solid #8b0000;
         padding: 6px 14px;
-        border-radius: 20px;
+        border-radius: 2px;
         font-size: 0.85rem;
-        font-weight: 600;
+        font-weight: bold;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        display: inline-block;
+        margin-top: 5px;
     }
 
-    /* Tipografía de etiquetas y valores */
     .detail-label {
         font-size: 0.8rem;
         text-transform: uppercase;
-        color: #64748b;
+        color: #8a8075;
         font-weight: 700;
         margin-bottom: 3px;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
     }
 
     .detail-value {
         font-size: 1rem;
-        color: #1e293b;
+        color: #d1c7bd;
         margin-bottom: 18px;
         font-weight: 500;
     }
 
-    /* Botones */
     .btn-medical {
-        background-color: #0284c7;
-        color: white;
-        border: 1px solid #0284c7;
-        border-radius: 4px;
-        font-weight: 600;
-        transition: background-color 0.2s;
+        background-color: #8b0000;
+        color: #ffffff;
+        border: 1px solid #5a0000;
+        border-radius: 2px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s;
     }
 
         .btn-medical:hover {
-            background-color: #0369a1;
-            color: white;
+            background-color: #ff0000;
+            color: #000000;
+            border-color: #ff0000;
+            box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
         }
 
     .btn-outline-danger-medical {
-        color: #ef4444;
-        border: 1px solid #fca5a5;
-        background-color: transparent;
-        font-weight: 600;
-        border-radius: 4px;
-        transition: all 0.2s;
+        color: #ff3333;
+        border: 1px solid #8b0000;
+        background-color: #1a0a0a;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 2px;
+        transition: all 0.3s;
     }
 
         .btn-outline-danger-medical:hover {
-            background-color: #fef2f2;
-            border-color: #ef4444;
+            background-color: #ff0000;
+            color: #000000;
+            border-color: #ff0000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
         }
 </style>
 
 <div class="container py-4">
-    <!-- Botón de regreso -->
     <a asp-action="Index" class="back-link">
-        &larr; Volver al Directorio Médico
+        &larr; Volver al Registro de Sujetos
     </a>
 
     <div class="row">
-        <!-- Columna Izquierda: Foto de Perfil y Datos Principales -->
         <div class="col-lg-4">
             <div class="clinic-card text-center">
                 <div class="avatar-container">
-                    <!-- Se lee mediante reflexión para evitar errores si tu entidad no define Foto o ImagenUrl -->
                     <img src="@(Model.GetType().GetProperty("ImagenUrl") != null ? Model.GetType().GetProperty("ImagenUrl").GetValue(Model) : "https://cdn-icons-png.flaticon.com/512/3774/3774299.png")"
-                         alt="Médico"
-                         style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%; background-color: #f8fafc; border: 3px solid #e2e8f0; padding: 5px;" />
+                         alt="Sujeto"
+                         style="width: 140px; height: 140px; object-fit: contain; border-radius: 50%;" />
 
-                    <h3 class="mt-3 mb-2 font-weight-bold" style="color: #0f172a;">@Model.Nombre</h3>
+                    <h3 class="mt-3 mb-2 font-weight-bold" style="color: #f1f1f1; letter-spacing: 1px;">@Model.Nombre</h3>
                     <span class="badge-specialty">@Model.Especialidad</span>
                 </div>
 
                 <div class="text-start">
-                    <div class="detail-label">Número de Colegiado</div>
-                    <div class="detail-value" style="font-weight: 700; color: #0284c7;">
-                        @* Adaptación segura de lectura dinámica para NumeroLicencia o NumeroColegiado *@
+                    <div class="detail-label">Número de Registro / Licencia</div>
+                    <div class="detail-value" style="font-weight: 700; color: #ff3333;">
                         @(Model.GetType().GetProperty("NumeroLicencia") != null
                             ? Model.GetType().GetProperty("NumeroLicencia").GetValue(Model)
                             : (Model.GetType().GetProperty("NumeroColegiado") != null
@@ -151,67 +211,65 @@
                                 : "Sin registrar"))
                     </div>
 
-                    <div class="detail-label">Código de Empleado</div>
+                    <div class="detail-label">Código del Sujeto</div>
                     <div class="detail-value">#@Model.Id</div>
                 </div>
             </div>
         </div>
 
-        <!-- Columna Derecha: Información Profesional y de Contacto -->
         <div class="col-lg-8">
             <div class="clinic-card">
-                <h3 class="section-title">Información de Contacto</h3>
+                <h3 class="section-title">Vías de Localización</h3>
 
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="detail-label">Correo Electrónico Institucional</div>
+                        <div class="detail-label">Correo de Red</div>
                         <div class="detail-value">
                             @(Model.GetType().GetProperty("Email") != null ? Model.GetType().GetProperty("Email").GetValue(Model) : "Sin registrar")
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="detail-label">Teléfono de Oficina</div>
+                        <div class="detail-label">Línea de Oficina</div>
                         <div class="detail-value">
                             @(Model.GetType().GetProperty("Telefono") != null ? Model.GetType().GetProperty("Telefono").GetValue(Model) : "Sin registrar")
                         </div>
                     </div>
                 </div>
 
-                <h3 class="section-title">Ubicación y Horarios</h3>
+                <h3 class="section-title">Coordenadas de Actividad</h3>
 
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="detail-label">Consultorio / Consultorio N°</div>
-                        <div class="detail-value" style="font-weight: 600;">
+                        <div class="detail-label">Ubicación / Consultorio N°</div>
+                        <div class="detail-value" style="font-weight: 600; color: #ff3333;">
                             @(Model.GetType().GetProperty("Consultorio") != null ? Model.GetType().GetProperty("Consultorio").GetValue(Model) : "No asignado")
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="detail-label">Horario de Atención</div>
+                        <div class="detail-label">Intervalo de Horario</div>
                         <div class="detail-value">
                             @(Model.GetType().GetProperty("HorarioAtencion") != null ? Model.GetType().GetProperty("HorarioAtencion").GetValue(Model) : "Lunes a Viernes (08:00 - 16:00)")
                         </div>
                     </div>
                 </div>
 
-                <h3 class="section-title">Perfil Profesional</h3>
+                <h3 class="section-title">Historial y Diagnóstico</h3>
 
                 <div class="row">
                     <div class="col-12">
-                        <div class="detail-label">Resumen / Descripción de Especialidad</div>
-                        <div class="detail-value text-muted" style="line-height: 1.6; font-size: 0.95rem; white-space: pre-line;">
-                            @(Model.GetType().GetProperty("Descripcion") != null ? Model.GetType().GetProperty("Descripcion").GetValue(Model) : "No se ha agregado un perfil o descripción adicional para este especialista médico.")
+                        <div class="detail-label">Resumen de Perfil Profesional</div>
+                        <div class="detail-value text-muted" style="line-height: 1.6; font-size: 0.95rem; white-space: pre-line; color: #8a8075 !important;">
+                            @(Model.GetType().GetProperty("Descripcion") != null ? Model.GetType().GetProperty("Descripcion").GetValue(Model) : "No se han detectado registros adicionales para este especialista.")
                         </div>
                     </div>
                 </div>
 
-                <!-- Acciones del Registro -->
-                <div class="d-flex justify-content-end gap-2 mt-4 pt-4 border-top" style="border-top: 1px solid #f1f5f9 !important;">
+                <div class="d-flex justify-content-end gap-2 mt-4 pt-4 border-top" style="border-top: 1px solid #3a1f1f !important;">
                     <a asp-action="Editar" asp-route-id="@Model.Id" class="btn btn-medical px-4 py-2" style="margin-right: 10px;">
-                        Editar Información
+                        Modificar Registro
                     </a>
                     <a asp-action="Eliminar" asp-route-id="@Model.Id" class="btn btn-outline-danger-medical px-4 py-2">
-                        Dar de Baja
+                        Dar de Baja / Archivar
                     </a>
                 </div>
             </div>

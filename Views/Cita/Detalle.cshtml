@@ -1,150 +1,223 @@
 ﻿@model CitasApp.Models.Cita
 
 <style>
-    /* Estilos Clínicos Coherentes con el Portal */
     body {
-        background-color: #f8fafc !important;
-        color: #1e293b;
-        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        background-color: #0a0a0a !important;
+        color: #d1c7bd;
+        font-family: 'Courier New', Courier, monospace;
     }
 
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #0284c7, #0d9488);
-            z-index: 9999;
-            pointer-events: none;
-        }
-
-    /* Enlace de retorno */
     .back-link {
-        color: #0284c7;
+        color: #8b0000;
         text-decoration: none;
-        font-weight: 600;
+        font-weight: bold;
         display: inline-flex;
         align-items: center;
         margin-bottom: 25px;
-        transition: color 0.2s;
+        transition: color 0.3s, text-shadow 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
 
         .back-link:hover {
-            color: #0369a1;
-            text-decoration: underline;
+            color: #ff0000;
+            text-decoration: none;
+            text-shadow: 0 0 8px #ff0000;
         }
 
-    /* Contenedor estilo ficha médica */
     .clinic-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        background: #121212;
+        border: 2px solid #3a1f1f;
+        border-radius: 4px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), inset 0 0 15px rgba(139, 0, 0, 0.15);
         padding: 30px;
         margin-bottom: 30px;
     }
 
     .section-title {
-        color: #0f172a;
-        font-size: 1.25rem;
+        color: #8b0000;
+        font-size: 1.3rem;
         font-weight: 700;
-        border-bottom: 2px solid #0d9488;
+        border-bottom: 2px solid #5a0000;
         padding-bottom: 8px;
         margin-top: 10px;
         margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
     }
 
-    /* Variaciones de badges según el estado de la cita */
+    .avatar-card-top {
+        text-align: center;
+        border-bottom: 1px solid #3a1f1f;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .avatar-card-top img {
+            filter: grayscale(80%) contrast(140%) brightness(85%);
+            transition: filter 0.3s;
+            position: relative;
+            z-index: 2;
+        }
+
+            .avatar-card-top img:hover {
+                filter: grayscale(20%) contrast(110%);
+            }
+
+        /* Espiral Palpitante (Efecto Latido Doble) */
+        .avatar-card-top::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 170px;
+            height: 170px;
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 0.12;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M 50 50 C 49 47, 53 47, 53 51 C 53 56, 46 56, 45 49 C 44 40, 56 39, 58 49 C 60 62, 41 63, 38 49 C 34 31, 59 28, 63 47 C 67 71, 33 71, 29 48 C 23 18, 67 13, 71 47 C 76 83, 21 82, 16 46' fill='none' stroke='%23ff0000' stroke-width='4' stroke-linecap='round'/></svg>");
+            background-size: contain;
+            background-repeat: no-repeat;
+            pointer-events: none;
+            z-index: 1;
+            animation: heartbeatSpiral 2.5s infinite ease-in-out;
+        }
+
+    @@keyframes heartbeatSpiral {
+        0%, 100% {
+            transform: translate(-50%, -50%) scale(0.9);
+            opacity: 0.1;
+        }
+
+        14% {
+            transform: translate(-50%, -50%) scale(1.18);
+            opacity: 0.35;
+            filter: drop-shadow(0 0 8px rgba(255,0,0,0.5));
+        }
+
+        28% {
+            transform: translate(-50%, -50%) scale(1.0);
+            opacity: 0.2;
+        }
+
+        42% {
+            transform: translate(-50%, -50%) scale(1.24);
+            opacity: 0.38;
+            filter: drop-shadow(0 0 12px rgba(255,0,0,0.6));
+        }
+
+        70% {
+            transform: translate(-50%, -50%) scale(0.9);
+            opacity: 0.1;
+        }
+    }
+
     .badge-scheduled {
-        background-color: #e0f2fe;
-        color: #0369a1;
+        background-color: #2b1a0a;
+        color: #ffaa00;
+        border: 1px solid #ffaa00;
         padding: 6px 14px;
-        border-radius: 20px;
-        font-weight: 600;
+        border-radius: 2px;
+        font-weight: bold;
         font-size: 0.85rem;
+        text-transform: uppercase;
+        text-shadow: 0 0 5px #ffaa00;
+        letter-spacing: 1px;
     }
 
     .badge-completed {
-        background-color: #dcfce7;
-        color: #15803d;
+        background-color: #0d200d;
+        color: #00ff00;
+        border: 1px solid #00ff00;
         padding: 6px 14px;
-        border-radius: 20px;
-        font-weight: 600;
+        border-radius: 2px;
+        font-weight: bold;
         font-size: 0.85rem;
+        text-transform: uppercase;
+        text-shadow: 0 0 5px #00ff00;
+        letter-spacing: 1px;
     }
 
     .badge-canceled {
-        background-color: #fee2e2;
-        color: #b91c1c;
+        background-color: #2b0d0d;
+        color: #ff3333;
+        border: 1px solid #ff3333;
         padding: 6px 14px;
-        border-radius: 20px;
-        font-weight: 600;
+        border-radius: 2px;
+        font-weight: bold;
         font-size: 0.85rem;
+        text-transform: uppercase;
+        text-shadow: 0 0 5px #ff3333;
+        letter-spacing: 1px;
     }
 
-    /* Tipografía de etiquetas y valores */
     .detail-label {
         font-size: 0.8rem;
         text-transform: uppercase;
-        color: #64748b;
+        color: #8a8075;
         font-weight: 700;
         margin-bottom: 3px;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
     }
 
     .detail-value {
         font-size: 1rem;
-        color: #1e293b;
+        color: #d1c7bd;
         margin-bottom: 18px;
         font-weight: 500;
     }
 
-    /* Botones */
     .btn-medical {
-        background-color: #0284c7;
-        color: white;
-        border: 1px solid #0284c7;
-        border-radius: 4px;
-        font-weight: 600;
-        transition: background-color 0.2s;
+        background-color: #8b0000;
+        color: #ffffff;
+        border: 1px solid #5a0000;
+        border-radius: 2px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s;
     }
 
         .btn-medical:hover {
-            background-color: #0369a1;
-            color: white;
-            box-shadow: 0 4px 6px rgba(2, 132, 199, 0.1);
+            background-color: #ff0000;
+            color: #000000;
+            border-color: #ff0000;
+            box-shadow: 0 0 12px rgba(255, 0, 0, 0.6);
         }
 
     .btn-outline-danger-medical {
-        color: #ef4444;
-        border: 1px solid #fca5a5;
-        background-color: transparent;
-        font-weight: 600;
-        border-radius: 4px;
-        transition: all 0.2s;
+        color: #ff3333;
+        border: 1px solid #8b0000;
+        background-color: #1a0a0a;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 2px;
+        transition: all 0.3s;
     }
 
         .btn-outline-danger-medical:hover {
-            background-color: #fef2f2;
-            border-color: #ef4444;
+            background-color: #ff0000;
+            color: #000000;
+            border-color: #ff0000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
         }
 </style>
 
 <div class="container py-4">
     <!-- Botón de regreso -->
     <a asp-action="Index" class="back-link">
-        &larr; Volver al Panel de Citas
+        &larr; Volver al Panel de Sesiones
     </a>
 
     <div class="row">
         <!-- Columna Izquierda: Información General de la Cita -->
         <div class="col-lg-4">
             <div class="clinic-card text-center">
-                <div class="border-bottom pb-3 mb-3">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3652/3652191.png" alt="Agenda" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 15px;" />
-                    <h4 class="font-weight-bold" style="color: #0f172a;">Detalle de Cita</h4>
+                <div class="avatar-card-top" style="border-bottom: 1px solid #3a1f1f !important;">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3652/3652191.png" alt="Reloj" style="width: 80px; height: 80px; object-fit: contain; margin-bottom: 15px;" />
+                    <h4 class="font-weight-bold" style="color: #f1f1f1; letter-spacing: 1px;">Detalle de Sesión</h4>
 
                     @{
                         var estado = Model.GetType().GetProperty("Estado")?.GetValue(Model)?.ToString() ?? "Pendiente";
@@ -162,11 +235,11 @@
                 </div>
 
                 <div class="text-start">
-                    <div class="detail-label">ID de Registro</div>
-                    <div class="detail-value">#@Model.Id</div>
+                    <div class="detail-label">ID de Registro de Sesión</div>
+                    <div class="detail-value" style="color: #ff3333;">#@Model.Id</div>
 
-                    <div class="detail-label">Fecha Programada</div>
-                    <div class="detail-value" style="font-weight: 700; color: #0284c7;">
+                    <div class="detail-label">Fecha de Ejecución</div>
+                    <div class="detail-value" style="font-weight: 700; color: #ff3333;">
                         @{
                             var fechaVal = Model.GetType().GetProperty("Fecha")?.GetValue(Model);
                             string fechaStr = "Fecha No Registrada";
@@ -185,8 +258,8 @@
                         @fechaStr
                     </div>
 
-                    <div class="detail-label">Hora Agendada</div>
-                    <div class="detail-value" style="font-weight: 700; color: #0d9488;">
+                    <div class="detail-label">Hora Límite (El tiempo corre)</div>
+                    <div class="detail-value" style="font-weight: 700; color: #ff3333;">
                         @{
                             var horaVal = Model.GetType().GetProperty("Hora")?.GetValue(Model);
                             string horaStr = "Hora No Registrada";
@@ -211,12 +284,12 @@
         <!-- Columna Derecha: Información Profesional y Médica -->
         <div class="col-lg-8">
             <div class="clinic-card">
-                <h3 class="section-title">Información del Paciente y Especialista</h3>
+                <h3 class="section-title">Identificación de Sujetos</h3>
 
                 <div class="row">
                     <!-- Paciente -->
                     <div class="col-md-6">
-                        <div class="detail-label">Paciente Asignado</div>
+                        <div class="detail-label">Sujeto de Pruebas</div>
                         <div class="detail-value" style="font-weight: 600;">
                             @{
                                 var pacienteObj = Model.GetType().GetProperty("Paciente")?.GetValue(Model);
@@ -234,7 +307,7 @@
 
                     <!-- Médico Tratante -->
                     <div class="col-md-6">
-                        <div class="detail-label">Médico Tratante</div>
+                        <div class="detail-label">Supervisor a Cargo</div>
                         <div class="detail-value" style="font-weight: 600;">
                             @{
                                 var medicoObj = Model.GetType().GetProperty("Medico")?.GetValue(Model);
@@ -251,22 +324,22 @@
                     </div>
                 </div>
 
-                <h3 class="section-title">Detalles Adicionales de la Consulta</h3>
+                <h3 class="section-title">Especificaciones de la Sesión</h3>
 
                 <div class="row">
                     <!-- Consultorio -->
                     <div class="col-md-6">
-                        <div class="detail-label">Consultorio Asignado</div>
-                        <div class="detail-value">
+                        <div class="detail-label">Cámara / Consultorio Asignado</div>
+                        <div class="detail-value" style="color: #ff3333;">
                             @(Model.GetType().GetProperty("Consultorio") != null ? Model.GetType().GetProperty("Consultorio").GetValue(Model) : "N/A")
                         </div>
                     </div>
 
                     <!-- Motivo -->
                     <div class="col-md-6">
-                        <div class="detail-label">Motivo de la Cita</div>
-                        <div class="detail-value text-muted" style="line-height: 1.6;">
-                            @(Model.GetType().GetProperty("Motivo") != null ? Model.GetType().GetProperty("Motivo").GetValue(Model) : "Consulta estándar o de rutina")
+                        <div class="detail-label">Motivo del Encuentro</div>
+                        <div class="detail-value text-muted" style="line-height: 1.6; color: #8a8075 !important;">
+                            @(Model.GetType().GetProperty("Motivo") != null ? Model.GetType().GetProperty("Motivo").GetValue(Model) : "Consulta estándar")
                         </div>
                     </div>
                 </div>
@@ -274,20 +347,20 @@
                 <!-- Observaciones -->
                 <div class="row">
                     <div class="col-12">
-                        <div class="detail-label">Observaciones Adicionales / Diagnóstico Inicial</div>
-                        <div class="detail-value text-muted" style="line-height: 1.6; font-size: 0.95rem;">
-                            @(Model.GetType().GetProperty("Observaciones") != null ? Model.GetType().GetProperty("Observaciones").GetValue(Model) : "No hay observaciones o notas adicionales registradas en esta cita.")
+                        <div class="detail-label">Observaciones y Dictamen Clínico</div>
+                        <div class="detail-value text-muted" style="line-height: 1.6; font-size: 0.95rem; color: #8a8075 !important;">
+                            @(Model.GetType().GetProperty("Observaciones") != null ? Model.GetType().GetProperty("Observaciones").GetValue(Model) : "No hay observaciones registradas.")
                         </div>
                     </div>
                 </div>
 
                 <!-- Acciones del Registro -->
-                <div class="d-flex justify-content-end gap-2 mt-4 pt-4 border-top" style="border-top: 1px solid #f1f5f9 !important;">
+                <div class="d-flex justify-content-end gap-2 mt-4 pt-4 border-top" style="border-top: 1px solid #3a1f1f !important;">
                     <a asp-action="Editar" asp-route-id="@Model.Id" class="btn btn-medical px-4 py-2" style="margin-right: 10px;">
-                        Editar Cita
+                        Modificar Parámetros
                     </a>
                     <a asp-action="Eliminar" asp-route-id="@Model.Id" class="btn btn-outline-danger-medical px-4 py-2">
-                        Cancelar Cita
+                        Anular Sesión
                     </a>
                 </div>
             </div>

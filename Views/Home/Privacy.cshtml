@@ -1,6 +1,107 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Protocolo de Confidencialidad";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<style>
+    /* Estilo del Archivo de Confidencialidad */
+    .confidential-box {
+        background-color: #121212;
+        border: 2px solid #3a1f1f;
+        border-radius: 4px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(139, 0, 0, 0.15);
+        padding: 40px;
+        margin-top: 40px;
+    }
+
+    .title-confidential {
+        color: #8b0000;
+        font-size: 1.8rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border-bottom: 2px solid #5a0000;
+        padding-bottom: 12px;
+        margin-bottom: 25px;
+        text-shadow: 1px 1px 2px #000;
+    }
+
+    .confidential-text {
+        color: #d1c7bd;
+        font-size: 1.05rem;
+        line-height: 1.8;
+        margin-bottom: 30px;
+    }
+
+    /* Lista de reglas de seguridad */
+    .rules-list {
+        list-style-type: none;
+        padding-left: 0;
+        margin-bottom: 30px;
+    }
+
+        .rules-list li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 18px;
+            line-height: 1.6;
+            color: #d1c7bd;
+        }
+
+            .rules-list li::before {
+                content: "💀";
+                position: absolute;
+                left: 0;
+                top: 2px;
+                font-size: 0.9rem;
+            }
+
+    /* Sello decorativo de CLASIFICADO */
+    .stamp-classified {
+        border: 3px double #ff3333;
+        color: #ff3333;
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        padding: 10px 20px;
+        display: inline-block;
+        transform: rotate(-3deg);
+        margin-top: 20px;
+        text-shadow: 0 0 5px rgba(255, 51, 51, 0.3);
+        box-shadow: 0 0 10px rgba(255, 51, 51, 0.2);
+    }
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="confidential-box">
+            <h1 class="title-confidential">@ViewData["Title"]</h1>
+
+            <p class="confidential-text">
+                El acceso a esta terminal de datos está estrictamente restringido. Para garantizar la integridad de las pruebas y la seguridad de cada uno de los registros, se aplican las siguientes directivas sobre el manejo de la información:
+            </p>
+
+            <ul class="rules-list">
+                <li>
+                    <strong>Anonimato del Sujeto:</strong> Todos los datos de los pacientes y expedientes ingresados son tratados bajo estricto resguardo. La información sensible no será revelada a terceros sin la debida autorización del supervisor a cargo.
+                </li>
+                <li>
+                    <strong>Protección del Supervisor:</strong> Las licencias, códigos de actividad y horarios de los especialistas médicos permanecen encriptados dentro de la bitácora analógica de este servidor.
+                </li>
+                <li>
+                    <strong>Honestidad del Registro:</strong> Cualquier intento deliberado de alterar los registros de citas, modificar perfiles sin autorización o vulnerar las capas criptográficas de este portal invalidará tu acceso.
+                </li>
+            </ul>
+
+            <p class="confidential-text text-muted" style="color: #8a8075 !important;">
+                Cada decisión que tomas en esta red queda registrada en un archivo inmutable. Los secretos están a salvo aquí... a menos que el juego requiera lo contrario.
+            </p>
+
+            <div class="text-center">
+                <div class="stamp-classified">
+                    ARCHIVO CLASIFICADO
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -8,12 +8,150 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CitasApp.styles.css" asp-append-version="true" />
+
+    <style>
+        /* Estilos Globales del Layout (Estética Saw - Terror Inmersivo) */
+        body {
+        background-color: #0a0a0a !important;
+        color: #d1c7bd !important;
+        font-family: 'Courier New', Courier, monospace !important;
+        overflow-x: hidden;
+        }
+
+        /* 1. Línea de advertencia superior */
+        body::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #8b0000, #2b0000);
+        z-index: 9999;
+        pointer-events: none;
+        }
+
+        /* 2. Viñeta Palpitante Global (Efecto Opresión / Latido) */
+        body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9998;
+        pointer-events: none;
+        box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.95), inset 0 0 40px rgba(139, 0, 0, 0.35);
+        animation: breathingDread 8s infinite alternate ease-in-out;
+        }
+
+        @@keyframes breathingDread {
+        0% {
+        box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.95), inset 0 0 40px rgba(139, 0, 0, 0.35);
+        }
+
+        100% {
+        box-shadow: inset 0 0 110px rgba(0, 0, 0, 0.98), inset 0 0 70px rgba(139, 0, 0, 0.65);
+        }
+        }
+
+        /* 3. Barra de navegación industrial */
+        .navbar-custom {
+        background-color: #121212 !important;
+        border-bottom: 2px solid #8b0000 !important;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.9) !important;
+        animation: cardFlicker 15s infinite;
+        }
+
+        .navbar-brand-custom {
+        color: #8b0000 !important;
+        font-weight: bold !important;
+        text-transform: uppercase !important;
+        letter-spacing: 2px !important;
+        transition: color 0.3s, text-shadow 0.3s !important;
+        animation: titleFlicker 10s infinite;
+        }
+
+        .navbar-brand-custom:hover {
+        color: #ff0000 !important;
+        text-shadow: 0 0 8px #ff0000 !important;
+        }
+
+        .nav-link-custom {
+        color: #8a8075 !important;
+        font-weight: bold !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1.5px !important;
+        transition: all 0.3s !important;
+        }
+
+        .nav-link-custom:hover {
+        color: #ff0000 !important;
+        text-shadow: 0 0 5px #ff0000 !important;
+        }
+
+        /* 4. Animaciones de Parpadeo / Falla eléctrica */
+        /* Parpadeo intermitente de títulos */
+        .main-title, .terminal-title, .section-title, .detail-label {
+        animation: titleFlicker 12s infinite;
+        }
+
+        @@keyframes titleFlicker {
+        0%, 92.99%, 95.01%, 97.99%, 100% {
+        opacity: 1;
+        filter: brightness(1);
+        }
+
+        93%, 95%, 98% {
+        opacity: 0.25;
+        filter: brightness(0.4) saturate(2);
+        }
+        }
+
+        /* Parpadeo de bordes de tarjetas y cabeceras */
+        .clinic-card, .clinic-header-container, .clinic-table-container {
+        animation: cardFlicker 18s infinite;
+        }
+
+        @@keyframes cardFlicker {
+        0%, 93.99%, 95.5%, 97.99%, 100% {
+        border-color: #3a1f1f;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(139, 0, 0, 0.15);
+        }
+
+        94%, 96%, 98% {
+        border-color: #ff0000;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(255, 0, 0, 0.45);
+        }
+        }
+
+        /* Pie de página metálico */
+        .footer-custom {
+        background-color: #050505 !important;
+        border-top: 2px solid #3a1f1f !important;
+        color: #8a8075 !important;
+        font-family: 'Courier New', Courier, monospace !important;
+        }
+
+        .footer-custom a {
+        color: #8b0000 !important;
+        text-decoration: none !important;
+        font-weight: bold !important;
+        transition: color 0.3s, text-shadow 0.3s !important;
+        }
+
+        .footer-custom a:hover {
+        color: #ff0000 !important;
+        text-shadow: 0 0 5px #ff0000 !important;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <!-- Navbar modificada a un tono oscuro con borde rojo óxido -->
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark navbar-custom mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
+                <a class="navbar-brand navbar-brand-custom" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -21,16 +159,16 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Paciente" asp-action="Index">Paciente</a>
-                        </li> 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Medico" asp-action="Index">Médico</a>
+                            <a class="nav-link nav-link-custom" asp-area="" asp-controller="Paciente" asp-action="Index">PACIENTES</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Cita" asp-action="Index">Cita</a>
+                            <a class="nav-link nav-link-custom" asp-area="" asp-controller="Medico" asp-action="Index">MEDICOS</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link nav-link-custom" asp-area="" asp-controller="Cita" asp-action="Index">CITAS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" asp-area="" asp-controller="Home" asp-action="Privacy">Privacidad</a>
                         </li>
                     </ul>
                 </div>
@@ -43,9 +181,10 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - CitasApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <!-- Footer adaptado al entorno oscuro de la base de datos -->
+    <footer class="footer footer-custom py-3 text-muted">
+        <div class="container text-center">
+            &copy; 2026 - CitasApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacidad</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
