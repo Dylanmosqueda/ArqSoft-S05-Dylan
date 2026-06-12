@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CitasApp.Models.Medico>
+﻿@model IEnumerable<CitasApp.Domain.Models.Medico>
 
 <style>
     body {
@@ -197,36 +197,47 @@
 </div>
 
 <div class="row row-laser-scan">
-    @foreach (var item in Model)
+    @if (Model != null && Model.Any())
     {
-        <div class="col-md-4 mb-4">
-            <div class="card card-doctor h-100 border-0">
-                <img src="@(item.GetType().GetProperty("ImagenUrl") != null ? item.GetType().GetProperty("ImagenUrl").GetValue(item) : "https://cdn-icons-png.flaticon.com/512/3774/3774299.png")"
-                     class="card-img-top p-4"
-                     alt="@item.Nombre"
-                     style="height: 180px; object-fit: contain;" />
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card card-doctor h-100 border-0">
+                    <img src="@(item.GetType().GetProperty("ImagenUrl") != null ? item.GetType().GetProperty("ImagenUrl").GetValue(item) : "https://cdn-icons-png.flaticon.com/512/3774/3774299.png")"
+                         class="card-img-top p-4"
+                         alt="@item.Nombre"
+                         style="height: 180px; object-fit: contain;" />
 
-                <div class="card-doctor-body text-center">
-                    <h5 class="card-title fw-bold" style="font-size: 1.2rem; color: #f1f1f1; letter-spacing: 0.5px;">@item.Nombre</h5>
+                    <div class="card-doctor-body text-center">
+                        <h5 class="card-title fw-bold" style="font-size: 1.2rem; color: #f1f1f1; letter-spacing: 0.5px;">@item.Nombre</h5>
 
-                    <span class="badge mb-3" style="background-color: #5a0000; border: 1px solid #8b0000; font-size: 0.85rem; padding: 6px 12px; border-radius: 2px; text-transform: uppercase; color: #f1f1f1; letter-spacing: 1px;">@item.Especialidad</span>
+                        <span class="badge mb-3" style="background-color: #5a0000; border: 1px solid #8b0000; font-size: 0.85rem; padding: 6px 12px; border-radius: 2px; text-transform: uppercase; color: #f1f1f1; letter-spacing: 1px;">@item.Especialidad</span>
 
-                    <p class="small text-muted mb-3" style="color: #8a8075 !important;">
-                        N° LICENCIA:
-                        <strong class="text-danger" style="text-shadow: 0 0 3px rgba(255, 51, 51, 0.2);">
-                            @(item.GetType().GetProperty("NumeroLicencia") != null
-                                ? item.GetType().GetProperty("NumeroLicencia").GetValue(item)
-                                : (item.GetType().GetProperty("NumeroColegiado") != null
-                                    ? item.GetType().GetProperty("NumeroColegiado").GetValue(item)
-                                    : "N/A"))
-                        </strong>
-                    </p>
+                        <p class="small text-muted mb-3" style="color: #8a8075 !important;">
+                            N° LICENCIA:
+                            <strong class="text-danger" style="text-shadow: 0 0 3px rgba(255, 51, 51, 0.2);">
+                                @(item.GetType().GetProperty("NumeroLicencia") != null
+                                    ? item.GetType().GetProperty("NumeroLicencia").GetValue(item)
+                                    : (item.GetType().GetProperty("NumeroColegiado") != null
+                                        ? item.GetType().GetProperty("NumeroColegiado").GetValue(item)
+                                        : "N/A"))
+                            </strong>
+                        </p>
 
-                    <a asp-action="Detalle" asp-route-id="@item.Id" class="btn btn-medical btn-sm w-100 mt-2">
-                        Inspeccionar Historial
-                    </a>
+                        <a asp-action="Detalle" asp-route-id="@item.Id" class="btn btn-medical btn-sm w-100 mt-2">
+                            Inspeccionar Historial
+                        </a>
+                    </div>
                 </div>
             </div>
+        }
+    }
+    else
+    {
+        <div class="col-12 text-center py-5">
+            <p style="color: #8a8075; font-weight: bold; letter-spacing: 1px;">
+                [ NO SE ENCONTRARON MÉDICOS REGISTRADOS EN ESTE ADAPTADOR ]
+            </p>
         </div>
     }
 </div>

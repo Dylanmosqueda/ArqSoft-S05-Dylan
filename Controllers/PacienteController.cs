@@ -1,19 +1,49 @@
-﻿using CitasApp.Interfaces;
+﻿using CitasApp.Application.DTOs;
+using CitasApp.Application.Interfaces;
+using CitasApp.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CitasApp.Controllers
+namespace CitasApp.Controllers;
+
+public class PacienteController : Controller
 {
-    public class PacienteController : Controller
+    private readonly IPacienteService _pacienteService;
+
+    public PacienteController(IPacienteService pacienteService)
     {
-        private readonly IPacienteRepository _repo;
-        public PacienteController(IPacienteRepository repo) { _repo = repo; }
+        _pacienteService = pacienteService;
+    }
 
-        public IActionResult Index() => View(_repo.ObtenerTodos());
+    // Acción principal (sin parámetros que causen conflictos)
+    public IActionResult Index()
+    {
+        // Si el servicio devuelve null, aseguramos mandar una lista vacía
+        var lista = _pacienteService.GetAll() ?? new List<Paciente>();
+        return View(lista);
+    }
 
-        public IActionResult Detalle(int id)
-        {
-            var paciente = _repo.ObtenerPorId(id);
-            return paciente == null ? NotFound() : View(paciente);
-        }
+    public IActionResult Paciente()
+    {
+        var pacientes = _pacienteService.GetAll() ?? new List<Paciente>();
+        return View(pacientes);
+    }
+
+    public IActionResult Detalle(int id)
+    {
+        var paciente = _pacienteService.GetById(id);
+        if (paciente == null) return Content("Paciente no encontrado");
+        return View(paciente);
+    }
+
+    public IActionResult Nuevo()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Nuevo(Paciente paciente)
+    {
+        _pacienteService.Add(paciente);
+        return RedirectToAction("Paciente");
     }
 }

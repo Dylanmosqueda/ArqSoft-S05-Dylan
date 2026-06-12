@@ -1,19 +1,47 @@
-﻿using CitasApp.Interfaces;
+﻿using CitasApp.Application.Interfaces;
+using CitasApp.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CitasApp.Controllers
+namespace CitasApp.Controllers;
+
+public class MedicoController : Controller
 {
-    public class MedicoController : Controller
+    private readonly IMedicoService _medicoService;
+
+    public MedicoController(IMedicoService medicoService)
     {
-        private readonly IMedicoRepository _repo;
-        public MedicoController(IMedicoRepository repo) { _repo = repo; }
+        _medicoService = medicoService;
+    }
 
-        public IActionResult Index() => View(_repo.ObtenerTodos());
+    public IActionResult Index()
+    {
+        // Se obtienen los médicos de manera segura y se limpian variables no utilizadas
+        var medicos = _medicoService.GetAll() ?? new List<Medico>();
+        return View(medicos);
+    }
 
-        public IActionResult Detalle(int id)
-        {
-            var medico = _repo.ObtenerPorId(id);
-            return medico == null ? NotFound() : View(medico);
-        }
+    public IActionResult Medico()
+    {
+        var medicos = _medicoService.GetAll() ?? new List<Medico>();
+        return View(medicos);
+    }
+
+    public IActionResult Detalle(int id)
+    {
+        var medico = _medicoService.GetById(id);
+        if (medico == null) return Content("Medico no encontrado");
+        return View(medico);
+    }
+
+    public IActionResult Nuevo()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Nuevo(Medico medico)
+    {
+        _medicoService.Add(medico);
+        return RedirectToAction("Medico");
     }
 }

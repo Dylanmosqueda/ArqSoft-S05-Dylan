@@ -1,4 +1,4 @@
-using CitasApp.Models;
+using CitasApp.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

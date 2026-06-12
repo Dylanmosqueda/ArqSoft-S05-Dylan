@@ -1,8 +1,8 @@
-﻿@model IEnumerable<CitasApp.Models.Cita>
+﻿@model IEnumerable<CitasApp.Domain.Models.Cita>
 
 @{
-    var pacientesList = ViewBag.Pacientes as List<CitasApp.Models.Paciente>;
-    var medicosList = ViewBag.Medicos as List<CitasApp.Models.Medico>;
+    var pacientesList = ViewBag.Pacientes as List<CitasApp.Domain.Models.Paciente>;
+    var medicosList = ViewBag.Medicos as List<CitasApp.Domain.Models.Medico>;
 }
 
 <style>
@@ -255,91 +255,102 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @if (Model != null && Model.Any())
                 {
-                    string pacienteNombre = "No registrado";
-                    string medicoNombre = "No registrado";
-                    string estado = "Pendiente";
-                    string badgeClass = "badge-scheduled";
-                    string fechaStr = "Fecha No Registrada";
-                    string horaStr = "Hora No Registrada";
-
+                    @foreach (var item in Model)
                     {
-                        if (pacientesList != null)
+                        string pacienteNombre = "No registrado";
+                        string medicoNombre = "No registrado";
+                        string estado = "Pendiente";
+                        string badgeClass = "badge-scheduled";
+                        string fechaStr = "Fecha No Registrada";
+                        string horaStr = "Hora No Registrada";
+
                         {
-                            var pac = pacientesList.FirstOrDefault(p => p.Id == item.PacienteId);
-                            if (pac != null)
+                            if (pacientesList != null)
                             {
-                                pacienteNombre = $"{pac.Nombre} {pac.Apellido}".Trim();
+                                var pac = pacientesList.FirstOrDefault(p => p.Id == item.PacienteId);
+                                if (pac != null)
+                                {
+                                    pacienteNombre = $"{pac.Nombre} {pac.Apellido}".Trim();
+                                }
+                            }
+
+                            if (medicosList != null)
+                            {
+                                var med = medicosList.FirstOrDefault(m => m.Id == item.MedicoId);
+                                if (med != null)
+                                {
+                                    medicoNombre = med.Nombre;
+                                }
+                            }
+
+                            var propEstado = item.GetType().GetProperty("Estado");
+                            if (propEstado != null)
+                            {
+                                estado = propEstado.GetValue(item)?.ToString() ?? "Pendiente";
+                            }
+
+                            if (estado == "Completada" || estado == "Finalizada" || estado == "Confirmada")
+                            {
+                                badgeClass = "badge-completed";
+                            }
+                            else if (estado == "Cancelada")
+                            {
+                                badgeClass = "badge-canceled";
+                            }
+
+                            var fechaVal = item.GetType().GetProperty("Fecha")?.GetValue(item);
+                            if (fechaVal != null)
+                            {
+                                if (fechaVal is DateOnly dateOnly)
+                                {
+                                    fechaStr = dateOnly.ToString("dd-MM-yyyy");
+                                }
+                                else
+                                {
+                                    fechaStr = string.Format("{0:dd-MM-yyyy}", fechaVal);
+                                }
+                            }
+
+                            var horaVal = item.GetType().GetProperty("Hora")?.GetValue(item);
+                            if (horaVal != null)
+                            {
+                                if (horaVal is TimeOnly timeOnly)
+                                {
+                                    horaStr = timeOnly.ToString("HH:mm");
+                                }
+                                else
+                                {
+                                    horaStr = string.Format("{0:HH:mm}", horaVal);
+                                }
                             }
                         }
 
-                        if (medicosList != null)
-                        {
-                            var med = medicosList.FirstOrDefault(m => m.Id == item.MedicoId);
-                            if (med != null)
-                            {
-                                medicoNombre = med.Nombre;
-                            }
-                        }
-
-                        var propEstado = item.GetType().GetProperty("Estado");
-                        if (propEstado != null)
-                        {
-                            estado = propEstado.GetValue(item)?.ToString() ?? "Pendiente";
-                        }
-
-                        if (estado == "Completada" || estado == "Finalizada" || estado == "Confirmada")
-                        {
-                            badgeClass = "badge-completed";
-                        }
-                        else if (estado == "Cancelada")
-                        {
-                            badgeClass = "badge-canceled";
-                        }
-
-                        var fechaVal = item.GetType().GetProperty("Fecha")?.GetValue(item);
-                        if (fechaVal != null)
-                        {
-                            if (fechaVal is DateOnly dateOnly)
-                            {
-                                fechaStr = dateOnly.ToString("dd-MM-yyyy");
-                            }
-                            else
-                            {
-                                fechaStr = string.Format("{0:dd-MM-yyyy}", fechaVal);
-                            }
-                        }
-
-                        var horaVal = item.GetType().GetProperty("Hora")?.GetValue(item);
-                        if (horaVal != null)
-                        {
-                            if (horaVal is TimeOnly timeOnly)
-                            {
-                                horaStr = timeOnly.ToString("HH:mm");
-                            }
-                            else
-                            {
-                                horaStr = string.Format("{0:HH:mm}", horaVal);
-                            }
-                        }
+                        <tr>
+                            <td class="fw-semibold" style="color: #ff3333;">@fechaStr</td>
+                            <td class="fw-semibold" style="color: #ff3333;">@horaStr</td>
+                            <td>@pacienteNombre</td>
+                            <td>@medicoNombre</td>
+                            <td>
+                                @(item.GetType().GetProperty("Motivo") != null ? item.GetType().GetProperty("Motivo").GetValue(item) : "")
+                            </td>
+                            <td>
+                                <span class="@badgeClass">@estado</span>
+                            </td>
+                            <td class="text-end">
+                                <a asp-action="Detalle" asp-route-id="@item.Id" class="btn btn-medical btn-sm px-3">
+                                    Ver Historial
+                                </a>
+                            </td>
+                        </tr>
                     }
-
+                }
+                else
+                {
                     <tr>
-                        <td class="fw-semibold" style="color: #ff3333;">@fechaStr</td>
-                        <td class="fw-semibold" style="color: #ff3333;">@horaStr</td>
-                        <td>@pacienteNombre</td>
-                        <td>@medicoNombre</td>
-                        <td>
-                            @(item.GetType().GetProperty("Motivo") != null ? item.GetType().GetProperty("Motivo").GetValue(item) : "")
-                        </td>
-                        <td>
-                            <span class="@badgeClass">@estado</span>
-                        </td>
-                        <td class="text-end">
-                            <a asp-action="Detalle" asp-route-id="@item.Id" class="btn btn-medical btn-sm px-3">
-                                Ver Historial
-                            </a>
+                        <td colspan="7" class="text-center py-4" style="color: #8a8075; font-weight: bold; letter-spacing: 1px;">
+                            [ NO SE ENCONTRARON CITAS PROGRAMADAS EN ESTE ADAPTADOR ]
                         </td>
                     </tr>
                 }

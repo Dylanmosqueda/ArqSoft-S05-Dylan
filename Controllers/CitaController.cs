@@ -1,35 +1,87 @@
-﻿using CitasApp.Interfaces;
+﻿using CitasApp.Application.Interfaces;
+using CitasApp.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace CitasApp.Controllers
+namespace CitasApp.Controllers;
+
+public class CitaController : Controller
 {
-    public class CitaController : Controller
+    private readonly ICitaService _citaService;
+    private readonly IPacienteService _pacienteService;
+    private readonly IMedicoService _medicoService;
+
+    public CitaController(ICitaService citaService, IPacienteService pacienteService, IMedicoService medicoService)
     {
-        private readonly ICitaRepository _citaRepo;
-        private readonly IPacienteRepository _pacienteRepo;
-        private readonly IMedicoRepository _medicoRepo;
+        _citaService = citaService;
+        _pacienteService = pacienteService;
+        _medicoService = medicoService;
+    }
 
-        public CitaController(ICitaRepository citaRepo,
-                              IPacienteRepository pacienteRepo,
-                              IMedicoRepository medicoRepo)
-        {
-            _citaRepo = citaRepo;
-            _pacienteRepo = pacienteRepo;
-            _medicoRepo = medicoRepo;
-        }
+    public IActionResult Index()
+    {
+        ViewBag.Pacientes = _pacienteService.GetAll() ?? new List<Paciente>();
+        ViewBag.Medicos = _medicoService.GetAll() ?? new List<Medico>();
 
-        public IActionResult Index()
-        {
-            ViewBag.Pacientes = _pacienteRepo.ObtenerTodos();
-            ViewBag.Medicos = _medicoRepo.ObtenerTodos();
-            return View(_citaRepo.ObtenerTodos());
-        }
+        var citasDto = _citaService.GetAll() ?? new List<CitasApp.Application.DTOs.CitaViewModel>();
 
-        public IActionResult PorPaciente(int pacienteId)
+        // Corregido: Usamos llaves {} para la inicialización y DateOnly.Parse para la fecha
+        var citas = citasDto.Select(vm => new Cita
         {
-            ViewBag.Pacientes = _pacienteRepo.ObtenerTodos();
-            ViewBag.Medicos = _medicoRepo.ObtenerTodos();
-            return View(_citaRepo.ObtenerPorPaciente(pacienteId));
-        }
+            Id = vm.Id,
+            PacienteId = vm.PacienteId,
+            MedicoId = vm.MedicoId,
+            Fecha = DateOnly.Parse(vm.Fecha),
+            Hora = vm.Hora,
+            Motivo = vm.Motivo,
+            Estado = vm.Estado
+        }).ToList();
+
+        return View(citas);
+    }
+
+    public IActionResult Cita()
+    {
+        ViewBag.Pacientes = _pacienteService.GetAll() ?? new List<Paciente>();
+        ViewBag.Medicos = _medicoService.GetAll() ?? new List<Medico>();
+
+        var viewModel = _citaService.GetAll() ?? new List<CitasApp.Application.DTOs.CitaViewModel>();
+        return View(viewModel);
+    }
+
+    public IActionResult Detalle(int id)
+    {
+        var viewModel = _citaService.GetById(id, _citaService.GetCita1());
+        if (viewModel == null) return Content("Cita no encontrada");
+
+        // Mapeamos el ViewModel de vuelta a la entidad Cita para cumplir con el @model de Detalle.cshtml
+        var cita = new Cita
+        {
+            Id = viewModel.Id,
+            PacienteId = viewModel.PacienteId,
+            MedicoId = viewModel.MedicoId,
+            Fecha = DateOnly.Parse(viewModel.Fecha), // Convertimos la fecha de string a DateOnly
+            Hora = viewModel.Hora,                   // Asignación directa de TimeOnly
+            Motivo = viewModel.Motivo,
+            Estado = viewModel.Estado
+        };
+
+        return View(cita);
+    }
+
+    public IActionResult Nuevo()
+    {
+        ViewBag.Pacientes = _pacienteService.GetAll() ?? new List<Paciente>();
+        ViewBag.Medicos = _medicoService.GetAll() ?? new List<Medico>();
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Nuevo(Cita cita)
+    {
+        _citaService.Add(cita);
+        return RedirectToAction("Cita");
     }
 }
