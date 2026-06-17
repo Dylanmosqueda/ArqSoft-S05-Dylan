@@ -32,19 +32,19 @@ var sqlitePath = Path.Combine(dataFolder, "citasapp.db");
 
 // ▶ Bloque A — JSON
 // (Para activar JSON: borre el /* de arriba y el */ de abajo. Deje los otros comentados)
-
+/*
 builder.Services.AddSingleton<IPacienteRepository>(_ => new JsonPacienteRepository(jsonPacientes));
 builder.Services.AddSingleton<IMedicoRepository>(_ => new JsonMedicoRepository(jsonMedicos));
 builder.Services.AddSingleton<ICitaRepository>(_ => new JsonCitaRepository(jsonCitas));
-
+*/
 
 // ▶ Bloque B — CSV
 // (Para activar CSV: borre el /* de arriba y el */ de abajo. Deje los otros comentados)
-/*
+
 builder.Services.AddSingleton<IPacienteRepository>(_ => new CsvPacienteRepository(csvPacientes));
 builder.Services.AddSingleton<IMedicoRepository>(_ => new CsvMedicoRepository(csvMedicos));
 builder.Services.AddSingleton<ICitaRepository>(_ => new CsvCitaRepository(csvCitas));
-*/
+
 
 // ▶ Bloque C — SQLite
 // (Para activar SQLite: borre el /* de arriba y el */ de abajo. Deje los otros comentados)
