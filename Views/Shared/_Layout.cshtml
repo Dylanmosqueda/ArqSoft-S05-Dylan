@@ -170,6 +170,24 @@
                         <li class="nav-item">
                             <a class="nav-link nav-link-custom" asp-area="" asp-controller="Home" asp-action="Privacy">Privacidad</a>
                         </li>
+
+                        <!-- Sección de Autenticación Adaptada Estéticamente -->
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item ms-auto">
+                                <span class="nav-link nav-link-custom" style="color: #8a8075 !important; cursor: default;">HOLA, @User.Identity.Name.ToUpper()!</span>
+                            </li>
+                            <li class="nav-item">
+                                <!-- Enlace GET directo adaptado al color rojo óxido característico -->
+                                <a class="nav-link nav-link-custom" style="color: #8b0000 !important; font-weight: bold;" asp-controller="Account" asp-action="Logout">CERRAR SESIÓN</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item ms-auto">
+                                <a class="nav-link nav-link-custom" asp-controller="Account" asp-action="Login">INICIAR SESIÓN</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -191,5 +209,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>
