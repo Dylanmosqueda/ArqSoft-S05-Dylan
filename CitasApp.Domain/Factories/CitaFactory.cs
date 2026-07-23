@@ -1,13 +1,9 @@
 ﻿using CitasApp.Domain.Models;
 
 namespace CitasApp.Domain.Factories;
-
 public class CitaFactory
 {
-    /// <summary>
-    /// Método de fábrica para crear una nueva instancia de Cita con valores predeterminados o válidos.
-    /// </summary>
-    public Cita Crear(int pacienteId, int medicoId, DateOnly fecha, string motivo, string estado = "Pendiente")
+    public Cita Construir(int pacienteId, int medicoId, DateOnly fecha, TimeOnly hora, string motivo)
     {
         return new Cita
         {
@@ -15,7 +11,7 @@ public class CitaFactory
             MedicoId = medicoId,
             Fecha = fecha,
             Motivo = motivo,
-            Estado = estado
+            Estado = "Pendiente"
         };
     }
 }
