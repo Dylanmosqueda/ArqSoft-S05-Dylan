@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="../CitasApp.Test/CitasApp.Test.csproj" Id="1705452c-ee81-4b63-b659-f55603219a55" />
+  <Project Path="../CitasApp.Test/CitasApp.Test.csproj" />
   <Project Path="CitasApp.Api/CitasApp.Api.csproj" />
   <Project Path="CitasApp.Application/CitasApp.Application.csproj" />
   <Project Path="CitasApp.csproj" />
