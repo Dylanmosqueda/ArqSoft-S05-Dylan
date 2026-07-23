@@ -1,8 +1,8 @@
 <Solution>
   <Project Path="../CitasApp.Test/CitasApp.Test.csproj" />
+  <Project Path="CitasApp.csproj" />
   <Project Path="CitasApp.Api/CitasApp.Api.csproj" />
   <Project Path="CitasApp.Application/CitasApp.Application.csproj" />
   <Project Path="CitasApp.Domain/CitasApp.Domain.csproj" />
   <Project Path="CitasApp.Infrastructure/CitasApp.Infrastructure.csproj" />
-  <Project Path="CitasApp.csproj" />
 </Solution>
